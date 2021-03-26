@@ -17,8 +17,20 @@ add_custom_command(
 add_custom_command(
     OUTPUT ${MOMO_CMD}
     MAIN_DEPENDENCY ${MOMO_TARBALL_NAME}
-    COMMAND "tar" "-m" "-xvf" ${MOMO_TARBALL_NAME})
+    COMMAND "tar" "-m" "-xvf" ${MOMO_TARBALL_NAME}
+    COMMAND "chmod" "u+x" ${MOMO_CMD}
+)
 
 add_custom_target(check_momo_version ALL COMMAND ${MOMO_CMD} "--version" DEPENDS ${MOMO_CMD})
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/momo_jetbox")
+#
+# install artifacts
+#
+
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/jetbox/momo" USE_SOURCE_PERMISSIONS)
+
+install(FILES "jetbox.service" DESTINATION "/usr/lib/systemd/system/")
+
+install(CODE "message(\"install has finished!\")")
+install(CODE "message(\"you can enable JetBox with\")")
+install(CODE "message(\"    sudo systemctl enable --now jetbox.service\")")
