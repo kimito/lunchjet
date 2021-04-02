@@ -1,5 +1,5 @@
 [Unit]
-Description=RC car control subsystem
+Description=momo for jetbox, RC car control subsystem
 After=network.target
 
 [Service]
