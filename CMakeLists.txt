@@ -24,6 +24,17 @@ add_custom_command(
 add_custom_target(check_momo_version ALL COMMAND ${MOMO_CMD} "--version" DEPENDS ${MOMO_CMD})
 
 #
+# build jetbox sources
+#
+add_subdirectory(src/i2c)
+add_subdirectory(src/include)
+
+#
+# build jetbox tests
+#
+add_subdirectory(test)
+
+#
 # install artifacts
 #
 
