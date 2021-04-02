@@ -9,5 +9,5 @@
 
 ```bash
 $ mkdir build && cd build
-build$ cmake .. && make && sudo make install
+build$ cmake .. && make VERBOSE=1 -j4 && sudo make install
 ```
