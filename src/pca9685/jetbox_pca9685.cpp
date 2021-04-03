@@ -9,6 +9,8 @@
 namespace jetbox {
 
 const int RESOLUTION = 4096;
+const uint8_t LED_ONOFF_START_ADDRESS = 0x08;
+const uint8_t NUM_REGISTERS_PER_CHANNEL = 4;
 
 PCA9685::PCA9685(uint32_t period_us,
  uint8_t adapter_number, uint8_t device_address, uint32_t oscillator_frequency)
@@ -32,11 +34,11 @@ int PCA9685::start()
 int PCA9685::set_pulse(uint8_t channel, uint32_t width_us)
 {
     float duty_rate = width_us/static_cast<double>(period_us);
-    std::cout << "duty rate:" << duty_rate << std::endl;
+    debug_debug("duty rate: %1.5f", duty_rate);
     uint16_t reg_value = static_cast<uint16_t>(std::round(RESOLUTION * duty_rate - 1));
-    std::cout << "reg value; " << hex2str(reg_value) << std::endl;
+    debug_debug("reg value; %s", hex2str(reg_value).c_str());
 
-    uint8_t reg_add = 0x08 + (4 * channel);
+    uint8_t reg_add = LED_ONOFF_START_ADDRESS + (NUM_REGISTERS_PER_CHANNEL * channel);
 
     int ret = 0;
     errno = 0;
