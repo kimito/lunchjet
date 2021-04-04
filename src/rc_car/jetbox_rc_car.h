@@ -15,6 +15,12 @@ class RCCar {
      */
     int steer(float value);
 
+    /**
+     * go forward with a specific speed
+     * @param[in] speed from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full speed.
+     */
+    int go(float speed);
+
     private:
     PCA9685 driver;
 };
