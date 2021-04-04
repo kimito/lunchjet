@@ -37,9 +37,6 @@ int I2CWriteTransaction::send()
     }
 
     struct i2c_rdwr_ioctl_data data = {msgs.data(), static_cast<uint32_t>(msgs.size())};
-    std::cout << "buf size: " << data.msgs[0].len << std::endl;
-    std::cout << "register address:" << hex2str(data.msgs[0].buf[0])  << std::endl;
-    std::cout << "register value:" << hex2str(data.msgs[0].buf[1]) << std::endl;
 
     int ret;
     errno = 0;
@@ -48,7 +45,6 @@ int I2CWriteTransaction::send()
             device.device_address(),
             strerror(errno));
     }
-
     return ret;
 }
 

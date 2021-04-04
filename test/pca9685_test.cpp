@@ -12,7 +12,7 @@ int main(int argc, const char *argv[])
     driver.set_pulse(0, 1.5 * 1000);
     driver.set_pulse(1, 1.5 * 1000);
 
-    driver.start();
+//    driver.start();
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
 

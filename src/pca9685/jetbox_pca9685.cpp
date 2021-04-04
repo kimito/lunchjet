@@ -38,24 +38,12 @@ int PCA9685::set_pulse(uint8_t channel, uint32_t width_us)
     uint16_t reg_value = static_cast<uint16_t>(std::round(RESOLUTION * duty_rate - 1));
     debug_debug("reg value; %s", hex2str(reg_value).c_str());
 
-    uint8_t reg_add = LED_ONOFF_START_ADDRESS + (NUM_REGISTERS_PER_CHANNEL * channel);
+    uint8_t register_address = LED_ONOFF_START_ADDRESS + (NUM_REGISTERS_PER_CHANNEL * channel);
 
-    int ret = 0;
-    errno = 0;
-    //set LED{channel}_OFF_L
-    if( (ret = device.write(reg_add, reg_value & 0xFF)) < 0) {
-        debug_err("i2c write of 1st byte failed; %s", errno2str().c_str());
-        return ret;
-    }
-    
-    errno = 0;
-    //set LED{channel}_OFF_H
-    if( (ret = device.write(reg_add + 1, reg_value >> 8)) < 0) {
-        debug_err("i2c write of 2nd byte failed: %s", errno2str().c_str());
-        return ret;
-    }
-
-    return 0;
+    return device.transaction()
+     .add_write(register_address, reg_value & 0xFF) //set LED{channel}_OFF_L
+     .add_write(register_address + 1, reg_value >> 8) //set LED{channel}_OFF_H
+     .send();
 }
 
 }//namespace jetbox
