@@ -7,7 +7,7 @@ namespace jetbox {
 class RCCar {
     public:
     RCCar();
-    ~RCCar() = default;
+    ~RCCar();
 
     /**
      * set steering value
@@ -16,10 +16,15 @@ class RCCar {
     int steer(float value);
 
     /**
-     * go forward with a specific speed
+     * go forward with a specific speed (memo: 0.084 is seemed to be a threshold to actual move)
      * @param[in] speed from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full speed.
      */
     int go(float speed);
+
+    /**
+     * stop drive motor
+     */
+    int stop();
 
     private:
     PCA9685 driver;

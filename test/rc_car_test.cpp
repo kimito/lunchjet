@@ -15,21 +15,14 @@ int main(int argc, const char *argv[])
         car.steer(std::sin(2*M_PI*s));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-#endif
-    
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    car.go(0.138f);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    car.go(0.0f);
-
-    return 0;
-
-
+#elif 1
     //stop and go
-    for(float s = 0.f; s <= 1.f; s+=0.05f) {
-        car.go((-std::cos(2*M_PI*s)+1)/2);
+    for(float s = 0.f; s <= 2.f; s+=0.01f) {
+        auto speed = 0.2/*max speed cap*/ * ((-std::cos(2*M_PI*s)+1)/2);
+        car.go(speed);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     return 0;
+#endif
 }

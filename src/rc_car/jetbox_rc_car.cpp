@@ -21,10 +21,16 @@ inline static uint32_t pulse_width(float value) {
 RCCar::RCCar()
 : driver(17.5 * 1000)
 {
-    driver.set_pulse(STEER_SERVO, 1.5 * 1000);
-    driver.set_pulse(DRIVE_MOTOR, 1.5 * 1000);
+    driver.set_pulse(STEER_SERVO, NEUTRAL_PULSE_WIDTH_US);
+    stop();
     driver.start();
 }
+
+RCCar::~RCCar()
+{
+    stop();
+}
+
 
 int RCCar::steer(float value)
 {
@@ -38,9 +44,12 @@ int RCCar::go(float speed)
         speed = 0.0f;
     }
 
-    return driver.set_pulse(DRIVE_MOTOR, pulse_width(speed));
+    return driver.set_pulse(DRIVE_MOTOR, pulse_width(-speed));
 }
 
-
+int RCCar::stop()
+{
+    driver.set_pulse(DRIVE_MOTOR, NEUTRAL_PULSE_WIDTH_US);
+}
 
 }//namespace jetbox
