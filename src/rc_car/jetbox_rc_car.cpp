@@ -8,7 +8,7 @@ enum RC_CAR_CH {
 };
 
 static const uint32_t NEUTRAL_PULSE_WIDTH_US = 1.5 * 1000;
-static const uint32_t MAX_PULSE_WIDTH_US = 1.9 * 1000;
+static const uint32_t MAX_PULSE_WIDTH_US = 1.95 * 1000;
 static const uint32_t PULSE_WIDTH_RANGE_US
  = MAX_PULSE_WIDTH_US - NEUTRAL_PULSE_WIDTH_US;
 

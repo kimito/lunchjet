@@ -10,9 +10,9 @@ int main(int argc, const char *argv[])
 {
     RCCar car;
 
-    for(float s = 0.f; s <= 1.f; s+=0.002f) {
+    for(float s = 0.f; s <= 5.f; s+=0.05f) {
         car.steer(std::sin(2*M_PI*s));
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     return 0;
