@@ -29,6 +29,7 @@ add_custom_target(check_momo_version ALL COMMAND ${MOMO_CMD} "--version" DEPENDS
 add_subdirectory(src/i2c)
 add_subdirectory(src/include)
 add_subdirectory(src/pca9685)
+add_subdirectory(src/rc_car)
 
 #
 # build jetbox tests
