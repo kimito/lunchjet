@@ -24,5 +24,8 @@ int main(int argc, const char *argv[])
     driver.set_pulse(0, 1.9 * 1000);
     driver.set_pulse(1, 1.9 * 1000);
 
+//    std::this_thread::sleep_for(std::chrono::seconds(3));
+//    driver.reset();
+
     return 0;
 }

@@ -31,6 +31,12 @@ int PCA9685::start()
     return device.write(0x00, 0x01);
 }
 
+int PCA9685::reset()
+{
+    //turn on RESTART bit on MODE1
+    return device.write(0x00, 0x91);
+}
+
 int PCA9685::set_pulse(uint8_t channel, uint32_t width_us)
 {
     float duty_rate = width_us/static_cast<double>(period_us);

@@ -27,6 +27,11 @@ class PCA9685 {
     int start();
 
     /**
+     * reset the chip
+     */
+    int reset();
+
+    /**
      * set pulse without delay
      * @param[in] channel channel number within 0-15
      * @param[in] width_us pulse width in microsecconds
