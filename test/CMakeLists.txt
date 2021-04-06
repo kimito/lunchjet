@@ -9,3 +9,6 @@ target_link_libraries(pca9685_test jetbox_pca9685)
 
 add_executable(rc_car_test rc_car_test.cpp)
 target_link_libraries(rc_car_test jetbox_rc_car)
+
+add_executable(user_input_device_test user_input_device_test.cpp)
+target_link_libraries(user_input_device_test jetbox_user_input_device)

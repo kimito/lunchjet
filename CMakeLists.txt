@@ -30,6 +30,7 @@ add_subdirectory(src/i2c)
 add_subdirectory(src/include)
 add_subdirectory(src/pca9685)
 add_subdirectory(src/rc_car)
+add_subdirectory(src/user_input_device)
 
 #
 # build jetbox tests
