@@ -22,5 +22,7 @@ int main(int argc, const char *argv[])
     device.add_listener(EV_ABS, ABS_RX, listener);
     device.listen();
 
+    std::this_thread::sleep_for(std::chrono::seconds(5));        
+
     return 0;
 }
