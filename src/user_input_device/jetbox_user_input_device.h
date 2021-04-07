@@ -6,13 +6,14 @@
 #include <mutex>
 #include <stdint.h>
 #include <linux/input.h>
+#include <atomic>
 
 namespace jetbox {
 
 
 class UserInputDevice {
     public:
-    UserInputDevice(const std::string &file_name);
+    UserInputDevice(const std::string &file_name, const std::atomic<bool> &stop_thread);
     ~UserInputDevice();
 
     class EventListener {
@@ -38,7 +39,7 @@ class UserInputDevice {
     int fd;
 
     std::thread waiting_thread;
-    volatile bool stop_thread;
+    const std::atomic<bool> &stop_thread;
 
     void listen_thread();
 };
