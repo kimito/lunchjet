@@ -43,9 +43,9 @@ int main(int argc, const char *argv[])
     sigaction(SIGTERM, &sa, NULL);
 
     ControllerListener listener;
-    RCCarController controller("/dev/input/event3", listener);
+    RCCarController controller("/dev/input/event3", listener, stop_controller_thread);
 
-    if(controller.listen(stop_controller_thread) < 0) {
+    if(controller.listen() < 0) {
         perror("listen() failed");
         exit(1);
     }
