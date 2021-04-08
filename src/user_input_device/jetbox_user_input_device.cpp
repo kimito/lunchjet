@@ -1,6 +1,5 @@
 #include "jetbox_user_input_device.h"
 
-#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
