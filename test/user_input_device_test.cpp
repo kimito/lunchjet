@@ -19,7 +19,6 @@ void signal_handler(int signal) {
     stop_user_input_device_thread.store(true);
 }
 
-struct sigaction sa;
 }
 
 
@@ -29,10 +28,10 @@ class Listener : public UserInputDevice::EventListener {
     }
 };
 
+
 int main(int argc, const char *argv[])
 {
-    std::cout << "hello world!" << std::endl;
-
+    struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = signal_handler;
     sigfillset(&sa.sa_mask);
@@ -45,6 +44,7 @@ int main(int argc, const char *argv[])
     device.add_listener(EV_ABS, ABS_RX, listener);
     if(device.listen() == -1){
         std::cout << "listen() failed" << std::endl;
+        exit(1);
     }
 
     pause();

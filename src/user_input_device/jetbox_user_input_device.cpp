@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/select.h>
 
 #include "debug_log.h"
 #include "string_utils.h"
@@ -57,13 +58,38 @@ int UserInputDevice::listen()
 }
 
 void UserInputDevice::listen_thread()
-{
-    std::cout << "listen_thread() start" << std::endl;
+{    
+    struct input_event events[64];
 
     while(!stop_thread.load()) {
-        std::cout << "listen_thread() wait..." << std::endl;
+        fd_set read_fds;
+        FD_ZERO(&read_fds);
+        FD_SET(fd, &read_fds);
+        struct timeval time_out = {1, 0};//1 second
+        int ret = select(fd + 1, &read_fds, NULL, NULL, &time_out);
+        if(stop_thread.load()) {
+            debug_notice("requested to stop");
+            break;
+        }
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        if(ret == -1) {
+            debug_err("select() failed: %s", errno2str().c_str());
+            break;
+        }
+        else if(ret == 0) { //select() exited with time out
+            continue;
+        }
+
+        ret = read(fd, events, sizeof(events));
+        if(ret < sizeof(struct input_event)) {
+            debug_err("read() failed: %s", errno2str().c_str());
+            continue;
+        }
+
+        for(int i = 0; i < (ret / sizeof(struct input_event)); ++i) {
+            std::cout << "input event: type(" << events[i].type << ") code(" << events[i].code << ") value(" << events[i].value << ")" << std::endl; 
+        }
+        std::cout << "loop" << std::endl;
     }
 
     close(fd);
