@@ -41,7 +41,8 @@ int main(int argc, const char *argv[])
     UserInputDevice device("/dev/input/event3", stop_user_input_device_thread);
     Listener listener;
 
-    device.add_listener(EV_ABS, ABS_RX, listener);
+    device.add_listener(EV_ABS, ABS_X, listener);
+    device.add_listener(EV_ABS, ABS_RZ, listener);
     if(device.listen() == -1){
         std::cout << "listen() failed" << std::endl;
         exit(1);

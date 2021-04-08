@@ -57,6 +57,20 @@ int UserInputDevice::listen()
     pthread_sigmask(SIG_SETMASK, &old_block, NULL);
 }
 
+void UserInputDevice::forward_events(const struct input_event *events, int num_events)
+{
+    for(int i = 0; i < num_events; ++i) {
+        const struct input_event &event = events[i];
+
+        for(auto &filter : filters){
+            if(event.type == filter.type && event.code == filter.code) {
+                filter.listener.onRecieve(event);
+                break;
+            }
+        }
+    }
+}
+
 void UserInputDevice::listen_thread()
 {    
     struct input_event events[64];
@@ -80,21 +94,17 @@ void UserInputDevice::listen_thread()
             continue;
         }
 
-        ret = read(fd, events, sizeof(events));
-        if(ret < sizeof(struct input_event)) {
+        if((ret = read(fd, events, sizeof(events))) < sizeof(struct input_event)) {
             debug_err("read() failed: %s", errno2str().c_str());
             continue;
         }
 
-        for(int i = 0; i < (ret / sizeof(struct input_event)); ++i) {
-            std::cout << "input event: type(" << events[i].type << ") code(" << events[i].code << ") value(" << events[i].value << ")" << std::endl; 
-        }
-        std::cout << "loop" << std::endl;
+        forward_events(events, ret/sizeof(struct input_event));
     }
 
     close(fd);
 
-    std::cout << "listen_thread() end" << std::endl;
+    debug_notice("listen_thread() end");
 }
 
 

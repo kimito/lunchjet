@@ -42,6 +42,7 @@ class UserInputDevice {
     const std::atomic<bool> &stop_thread;
 
     void listen_thread();
+    void forward_events(const struct input_event *events, int num_events);
 };
 
 }//namespace jetbox
