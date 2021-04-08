@@ -12,3 +12,6 @@ target_link_libraries(rc_car_test jetbox_rc_car)
 
 add_executable(user_input_device_test user_input_device_test.cpp)
 target_link_libraries(user_input_device_test jetbox_user_input_device)
+
+add_executable(rc_car_controller_test rc_car_controller_test.cpp)
+target_link_libraries(rc_car_controller_test jetbox_rc_car_controller)

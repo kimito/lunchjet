@@ -31,6 +31,7 @@ add_subdirectory(src/include)
 add_subdirectory(src/pca9685)
 add_subdirectory(src/rc_car)
 add_subdirectory(src/user_input_device)
+add_subdirectory(src/rc_car_controller)
 
 #
 # build jetbox tests
