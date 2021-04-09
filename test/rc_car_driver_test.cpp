@@ -1,4 +1,4 @@
-#include "jetbox_rc_car.h"
+#include "jetbox_rc_car_driver.h"
 
 #include <iostream>
 #include <thread>
@@ -8,7 +8,7 @@ using namespace jetbox;
 
 int main(int argc, const char *argv[])
 {
-    RCCar car;
+    RCCarDriver car;
 
     //swing the steering
     for(float s = 0.f; s <= 3.f; s+=0.05f) {

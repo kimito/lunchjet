@@ -4,10 +4,10 @@
 
 namespace jetbox {
 
-class RCCar {
+class RCCarDriver {
     public:
-    RCCar();
-    ~RCCar();
+    RCCarDriver();
+    ~RCCarDriver();
 
     /**
      * set steering value

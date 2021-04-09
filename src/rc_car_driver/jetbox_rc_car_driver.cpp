@@ -1,4 +1,4 @@
-#include "jetbox_rc_car.h"
+#include "jetbox_rc_car_driver.h"
 
 namespace jetbox {
 
@@ -18,7 +18,7 @@ inline static uint32_t pulse_width(float value) {
  }
 
 
-RCCar::RCCar()
+RCCarDriver::RCCarDriver()
 : driver(17.5 * 1000)
 {
     driver.set_pulse(STEER_SERVO, NEUTRAL_PULSE_WIDTH_US);
@@ -26,18 +26,18 @@ RCCar::RCCar()
     driver.start();
 }
 
-RCCar::~RCCar()
+RCCarDriver::~RCCarDriver()
 {
     stop();
 }
 
 
-int RCCar::steer(float value)
+int RCCarDriver::steer(float value)
 {
     return driver.set_pulse(STEER_SERVO, pulse_width(value));
 }
 
-int RCCar::go(float speed)
+int RCCarDriver::go(float speed)
 {
     //avoid to move backward
     if(speed < 0) {
@@ -47,7 +47,7 @@ int RCCar::go(float speed)
     return driver.set_pulse(DRIVE_MOTOR, pulse_width(-speed));
 }
 
-int RCCar::stop()
+int RCCarDriver::stop()
 {
     driver.set_pulse(DRIVE_MOTOR, NEUTRAL_PULSE_WIDTH_US);
 }
