@@ -17,20 +17,20 @@ RCCarController::RCCarController(const std::string &device_file_name,
 
 int RCCarController::listen()
 {
-    listener.onChangeAccele(0);
-    listener.onChangeSteering(0);
-    
+    listener.on_change_accel(0);
+    listener.on_change_steering(0);
+
     return device.listen();
 }
 
-void RCCarController::onRecieve(const struct input_event &event)
+void RCCarController::on_receive(const struct input_event &event)
 {
     switch(event.code) {
         case ABS_X:
-            listener.onChangeSteering(convert_steering_value(event.value, 0, 65535));
+            listener.on_change_steering(convert_steering_value(event.value, 0, 65535));
             break;
         case ABS_RZ:
-            listener.onChangeAccele(convert_accele_value(event.value, 0, 1023));
+            listener.on_change_accel(convert_accel_value(event.value, 0, 1023));
         default:
             debug_warning("unknown code:%d value:%d", event.code, event.value);
     }
@@ -44,7 +44,7 @@ float RCCarController::convert_steering_value(int value, int range_min, int rang
     return (value - ave)/half_range;
 }
 
-float RCCarController::convert_accele_value(int value, int range_min, int range_max)
+float RCCarController::convert_accel_value(int value, int range_min, int range_max)
 {
     return static_cast<float>(value - range_min)/(range_max - range_min);
 }

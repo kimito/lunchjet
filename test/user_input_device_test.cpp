@@ -23,7 +23,7 @@ void signal_handler(int signal) {
 
 
 class Listener : public UserInputDevice::EventListener {
-    void onRecieve(const struct input_event &event) override {
+    void on_receive(const struct input_event &event) override {
         std::cout << "event type:" << event.type << " code:" << event.code << " value:" << event.value << std::endl;
     }
 };

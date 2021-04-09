@@ -63,7 +63,7 @@ void UserInputDevice::forward_events(const struct input_event *events, int num_e
 
         for(auto &filter : filters){
             if(event.type == filter.type && event.code == filter.code) {
-                filter.listener.onRecieve(event);
+                filter.listener.on_receive(event);
                 break;
             }
         }

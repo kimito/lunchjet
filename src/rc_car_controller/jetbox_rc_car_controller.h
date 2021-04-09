@@ -9,8 +9,8 @@ namespace jetbox {
 
 class RCCarControllerListener {
     public:
-    virtual void onChangeSteering(float value) = 0;
-    virtual void onChangeAccele(float value) = 0;
+    virtual void on_change_steering(float value) = 0;
+    virtual void on_change_accel(float value) = 0;
 };
 
 class RCCarController : public UserInputDevice::EventListener {
@@ -22,14 +22,14 @@ class RCCarController : public UserInputDevice::EventListener {
 
     int listen();
 
-    void onRecieve(const struct input_event &event) override;
+    void on_receive(const struct input_event &event) override;
 
     private:
     UserInputDevice device;
     RCCarControllerListener &listener;
 
     float convert_steering_value(int value, int range_min, int range_max);
-    float convert_accele_value(int value, int range_min, int range_max);
+    float convert_accel_value(int value, int range_min, int range_max);
 };
 
 }//namespace jetbox

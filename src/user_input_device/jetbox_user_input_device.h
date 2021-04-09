@@ -18,7 +18,7 @@ class UserInputDevice {
 
     class EventListener {
         public:
-        virtual void onRecieve(const struct input_event &event) = 0;
+        virtual void on_receive(const struct input_event &event) = 0;
     };
     void add_listener(uint16_t type, uint16_t code, EventListener &listener); 
 

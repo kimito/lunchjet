@@ -24,11 +24,11 @@ void signal_handler(int signal) {
 using namespace jetbox;
 
 class ControllerListener : public RCCarControllerListener {
-    void onChangeSteering(float value) override {
+    void on_change_steering(float value) override {
         std::cout << "steering:" << value << std::endl;
     }
 
-    void onChangeAccele(float value) override {
+    void on_change_accel(float value) override {
         std::cout << "accele:" << value << std::endl;
     }
 };
