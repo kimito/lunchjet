@@ -32,7 +32,7 @@ add_subdirectory(src/pca9685)
 add_subdirectory(src/rc_car_driver)
 add_subdirectory(src/user_input_device)
 add_subdirectory(src/rc_car_controller)
-add_subdirectory(src/rc_car_control_server)
+add_subdirectory(src/rc_car_server)
 
 #
 # build jetbox tests
