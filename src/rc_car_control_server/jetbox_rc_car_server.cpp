@@ -39,7 +39,7 @@ class RCCarServer : public RCCarControllerListener {
 
     void on_change_accel(float value) override {
         if(is_going_back) {
-            driver.back(value * 0.2f);
+            driver.back(value * 0.3f);
         }
         else {
             driver.go(value * 0.2f);
