@@ -40,10 +40,7 @@ int PCA9685::reset()
 int PCA9685::set_pulse(uint8_t channel, uint32_t width_us)
 {
     float duty_rate = width_us/static_cast<double>(period_us);
-    debug_debug("duty rate: %1.5f", duty_rate);
     uint16_t reg_value = static_cast<uint16_t>(std::round(RESOLUTION * duty_rate - 1));
-    debug_debug("reg value; %s", hex2str(reg_value).c_str());
-
     uint8_t register_address = LED_ONOFF_START_ADDRESS + (NUM_REGISTERS_PER_CHANNEL * channel);
 
     return device.transaction()
