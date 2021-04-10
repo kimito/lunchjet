@@ -23,11 +23,13 @@ class PCA9685 {
 
     /**
      * start sending the pulses of each channel
+     * @return 0 on success, otherwise error (see errno)
      */
     int start();
 
     /**
      * reset the chip
+     * @return 0 on success, otherwise error (see errno)
      */
     int reset();
 
@@ -35,6 +37,7 @@ class PCA9685 {
      * set pulse without delay
      * @param[in] channel channel number within 0-15
      * @param[in] width_us pulse width in microsecconds
+     * @return 0 on success, otherwise error (see errno)
      */
     int set_pulse(uint8_t channel, uint32_t width_us);
 
