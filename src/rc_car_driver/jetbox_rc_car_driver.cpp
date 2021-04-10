@@ -47,6 +47,15 @@ int RCCarDriver::go(float speed)
     return driver.set_pulse(DRIVE_MOTOR, pulse_width(-speed));
 }
 
+int RCCarDriver::back(float speed)
+{
+    if(speed < 0) {
+        speed = 0.0f;
+    }
+
+    return driver.set_pulse(DRIVE_MOTOR, pulse_width(speed));
+}
+
 int RCCarDriver::stop()
 {
     driver.set_pulse(DRIVE_MOTOR, NEUTRAL_PULSE_WIDTH_US);

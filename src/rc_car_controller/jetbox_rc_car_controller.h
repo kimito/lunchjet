@@ -11,6 +11,12 @@ class RCCarControllerListener {
     public:
     virtual void on_change_steering(float value) = 0;
     virtual void on_change_accel(float value) = 0;
+
+    /**
+     * change status of back button
+     * @param[in] value 0 on pressed, 1 on released
+     */
+    virtual void on_change_back(int value) = 0;
 };
 
 class RCCarController : public UserInputDevice::EventListener {

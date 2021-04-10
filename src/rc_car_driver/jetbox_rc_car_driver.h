@@ -22,6 +22,12 @@ class RCCarDriver {
     int go(float speed);
 
     /**
+     * go backward with a specific speed
+     * @param[in] speed from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full speed.
+     */
+    int back(float speed);
+
+    /**
      * stop drive motor
      */
     int stop();

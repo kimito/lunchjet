@@ -38,12 +38,27 @@ class RCCarServer : public RCCarControllerListener {
     }
 
     void on_change_accel(float value) override {
-        driver.go(value * 0.20f);
+        if(is_going_back) {
+            driver.back(value * 0.2f);
+        }
+        else {
+            driver.go(value * 0.2f);
+        }
+    }
+
+    void on_change_back(int value) override {
+        if(value) {
+            is_going_back = true;
+        }
+        else {
+            is_going_back = false;
+        }
     }
 
     private:
     RCCarDriver driver;
     RCCarController controller;
+    bool is_going_back = false;
 };
 
 int main(int argc, const char *argv[])

@@ -31,6 +31,16 @@ class ControllerListener : public RCCarControllerListener {
     void on_change_accel(float value) override {
         std::cout << "accele:" << value << std::endl;
     }
+
+    void on_change_back(int value) override {
+        if(value) {
+            std::cout << "back button pressed" << std::endl;
+        }
+        else {
+            std::cout << "back button released" << std::endl;
+        }
+    }
+
 };
 
 int main(int argc, const char *argv[])
