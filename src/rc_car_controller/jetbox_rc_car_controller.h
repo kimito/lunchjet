@@ -49,7 +49,7 @@ class RCCarController : public UserInputDevice::EventListener {
 
     /**
      * start sending the input events to the listener
-     * @return 0 on success, otherwise error (see errno)
+     * @return >= 0 on success, otherwise error (see errno)
      */
     int listen();
 

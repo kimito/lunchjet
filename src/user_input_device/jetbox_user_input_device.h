@@ -42,7 +42,7 @@ class UserInputDevice {
 
     /**
      * start receiving input events for the listener
-     * @return 0 on success, otherwise error (see errno)
+     * @return >= 0 on success, otherwise error (see errno)
      */
     int listen();
 

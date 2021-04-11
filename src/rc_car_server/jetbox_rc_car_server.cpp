@@ -5,12 +5,15 @@
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <thread>
 
 #include "jetbox_rc_car_driver.h"
 #include "jetbox_rc_car_controller.h"
+#include "debug_log.h"
+#include "string_utils.h"
 
 using namespace jetbox;
+
 
 namespace {
 
@@ -30,7 +33,7 @@ class RCCarServer : public RCCarControllerListener {
     ~RCCarServer() = default;
 
     int start() {
-        controller.listen();
+        return controller.listen();
     }
 
     void on_change_steering(float value) override {
@@ -72,10 +75,26 @@ int main(int argc, const char *argv[])
 
     RCCarServer server;
 
-    std::cout << "start server" << std::endl;
-    server.start();
+    std::cout << "starting server..." << std::endl;
+    while(true) {
+        int ret = server.start();
+        if(ret >= 0) {
+            break;
+        }
+        else if(errno == ENOENT){
+            debug_notice("controller not found retry after 3sec...");
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            continue;
+        }
+        else {
+            std::cerr << "error occurred on starting the server :" << errno2str() << std::endl;
+            exit(1);
+        }
+    }
+
+    std::cout << "server started" << std::endl;
     pause();
-    std::cout << "exit server" << std::endl;
+    std::cout << "terminating server..." << std::endl;
 
     return 0;
 }
