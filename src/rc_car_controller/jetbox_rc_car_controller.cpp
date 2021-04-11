@@ -11,9 +11,11 @@ RCCarController::RCCarController(const std::string &device_file_name,
 : device(device_file_name, stop_thread),
   listener(listener)
 {
-    device.add_listener(EV_ABS, ABS_X, *this);
-    device.add_listener(EV_ABS, ABS_RZ, *this);
-    device.add_listener(EV_KEY, BTN_SOUTH, *this);
+    device.add_listener({
+     {EV_ABS, ABS_X},
+     {EV_ABS, ABS_RZ},
+     {EV_KEY, BTN_SOUTH}},
+     *this);
 }
 
 int RCCarController::listen()
@@ -22,6 +24,16 @@ int RCCarController::listen()
     listener.on_change_steering(0);
 
     return device.listen();
+}
+
+void RCCarController::on_connect()
+{
+    listener.on_connect();
+}
+
+void RCCarController::on_error()
+{
+    listener.on_error();
 }
 
 void RCCarController::on_receive(const struct input_event &event)
@@ -39,6 +51,11 @@ void RCCarController::on_receive(const struct input_event &event)
         default:
             debug_warning("unknown code:%d value:%d", event.code, event.value);
     }
+}
+
+void RCCarController::on_close()
+{
+    listener.on_close();
 }
 
 float RCCarController::convert_steering_value(int value, int range_min, int range_max)

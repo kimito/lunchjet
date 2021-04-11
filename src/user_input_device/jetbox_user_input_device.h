@@ -26,19 +26,39 @@ class UserInputDevice {
     class EventListener {
         public:
         /**
+         * an event handler for starting connection with the device
+         */
+        virtual void on_connect(){}
+
+        /**
          * an event handler for receiving input events
          * @param[in] event an input event
          */
         virtual void on_receive(const struct input_event &event) = 0;
+
+        /**
+         * an event handler for closing connection with the device
+         */
+        virtual void on_close(){}
+
+        /**
+         * an event handler for occurring some error that can't be fixed (see errno for detail)
+         * after calling this function, the class will stop working.
+         */
+        virtual void on_error(){exit(1);}
+    };
+
+    struct EventIndicator {
+        uint16_t type; //!< the type of the event. (see struct input_event::type)
+        uint16_t code; //!< the code of the event. (see struct input_event::type)
     };
 
     /**
      * add a listener to receive input events
-     * @param[in] type the type of the event that the listener wants to receive (input_event::type)
-     * @param[in] code the code of the event that the listener wants to receive (input_event::type)
+     * @param[in] indicators 
      * @param[in] listener the listener
      */ 
-    void add_listener(uint16_t type, uint16_t code, EventListener &listener); 
+    void add_listener(const std::vector<EventIndicator> &indicators, EventListener &listener); 
 
     /**
      * start receiving input events for the listener
@@ -48,8 +68,7 @@ class UserInputDevice {
 
     private:
     struct EventFilter {
-        uint16_t type;
-        uint16_t code;
+        std::vector<EventIndicator> indicators;
         EventListener &listener;
     };
 
@@ -64,7 +83,10 @@ class UserInputDevice {
     const std::atomic<bool> &stop_thread;
 
     void listen_thread();
+    void notify_connect();
+    void notify_error();
     void forward_events(const struct input_event *events, int num_events);
+    void notify_close();
 };
 
 }//namespace jetbox

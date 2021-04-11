@@ -14,6 +14,16 @@ class RCCarControllerListener {
     public:
 
     /**
+     * an event handler for connection with the controller
+     */
+    virtual void on_connect(){};
+
+    /**
+     * an event handler for occurring on the connection
+     */
+    virtual void on_error(){exit(1);}
+
+    /**
      * an event handler for receiving value of steering
      * @param[in] value direction of steering. -1 for turning left, 1 for tuning right.
      */
@@ -30,6 +40,12 @@ class RCCarControllerListener {
      * @param[in] value status of the back button, 0 with pressed, 1 with released
      */
     virtual void on_change_back(int value) = 0;
+
+    /**
+     * an event handler for closing connnection with the controller
+     * (the class will retry to wait new connection)
+     */
+    virtual void on_close(){}
 };
 
 /**
@@ -56,7 +72,22 @@ class RCCarController : public UserInputDevice::EventListener {
     /**
      * an function for internal use only, do not coll from users.
      */
+    virtual void on_connect() override;
+
+    /**
+     * an function for internal use only, do not coll from users.
+     */
     void on_receive(const struct input_event &event) override;
+ 
+    /**
+     * an function for internal use only, do not coll from users.
+     */
+    void on_close() override;
+
+    /**
+     * an function for internal use only, do not coll from users.
+     */
+    virtual void on_error() override;
 
     private:
     UserInputDevice device;
