@@ -23,8 +23,16 @@ void signal_handler(int signal) {
 
 
 class Listener : public UserInputDevice::EventListener {
+    void on_connect() {
+        std::cout << "connect" << std::endl;
+    }
+
     void on_receive(const struct input_event &event) override {
         std::cout << "event type:" << event.type << " code:" << event.code << " value:" << event.value << std::endl;
+    }
+
+    void on_close() {
+        std::cout << "close" << std::endl;
     }
 };
 

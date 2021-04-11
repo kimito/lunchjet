@@ -114,6 +114,8 @@ void UserInputDevice::listen_thread()
             FD_ZERO(&read_fds);
             FD_SET(fd, &read_fds);
             struct timeval time_out = {1, 0};//1 second
+
+            errno = 0;
             int ret = select(fd + 1, &read_fds, NULL, NULL, &time_out);
             if(stop_thread.load()) {
                 debug_notice("requested to stop");
@@ -137,9 +139,12 @@ void UserInputDevice::listen_thread()
                 continue;
             }
 
-            if((ret = read(fd, events, sizeof(events))) < sizeof(struct input_event)) {
+            errno = 0;
+            ret = read(fd, events, sizeof(events));
+            if(ret < static_cast<int>(sizeof(struct input_event))) {
+                notify_close();
                 debug_err("read() failed: %s", errno2str().c_str());
-                continue;
+                break;
             }
 
             forward_events(events, ret/sizeof(struct input_event));
