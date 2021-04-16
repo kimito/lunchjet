@@ -46,7 +46,11 @@ add_subdirectory(test)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/jetbox/momo" USE_SOURCE_PERMISSIONS)
 
 install(FILES "jetbox_momo.service" DESTINATION "/usr/lib/systemd/system/")
+install(FILES "jetbox_virtual_camera.service" DESTINATION "/usr/lib/systemd/system/")
+install(FILES "jetbox.conf" DESTINATION "/etc/modprobe.d/")
+install(FILES "jetbox_load.conf" DESTINATION "/etc/modules-load.d/")
 
 install(CODE "message(\"install has finished!\")")
 install(CODE "message(\"you can enable JetBox with\")")
 install(CODE "message(\"    sudo systemctl enable --now jetbox_momo.service\")")
+install(CODE "message(\"    sudo systemctl enable --now jetbox_virtual_camera.service\")")
