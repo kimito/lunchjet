@@ -1,4 +1,4 @@
-#include "lunchjet_i2c.h"
+#include "i2c.h"
 
 #include <iostream>
 #include <string.h>

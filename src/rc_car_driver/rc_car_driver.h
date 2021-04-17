@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lunchjet_pca9685.h"
+#include "pca9685.h"
 
 namespace lunchjet {
 

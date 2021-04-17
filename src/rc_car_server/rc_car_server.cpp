@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <thread>
 
-#include "lunchjet_rc_car_driver.h"
-#include "lunchjet_rc_car_controller.h"
+#include "rc_car_driver.h"
+#include "rc_car_controller.h"
 #include "debug_log.h"
 #include "string_utils.h"
 

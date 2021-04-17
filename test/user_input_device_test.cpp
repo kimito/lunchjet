@@ -1,4 +1,4 @@
-#include "lunchjet_user_input_device.h"
+#include "user_input_device.h"
 
 #include <iostream>
 #include <linux/input.h>

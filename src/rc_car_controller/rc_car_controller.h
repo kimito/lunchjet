@@ -3,7 +3,7 @@
 #include <string>
 #include <atomic>
 
-#include "lunchjet_user_input_device.h"
+#include "user_input_device.h"
 
 namespace lunchjet {
 

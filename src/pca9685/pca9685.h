@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "lunchjet_i2c.h"
+#include "i2c.h"
 
 namespace lunchjet {
 

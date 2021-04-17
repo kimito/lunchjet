@@ -3,7 +3,7 @@
 #include <syslog.h>
 #include <string.h>
 
-#include "lunchjet_i2c.h"
+#include "i2c.h"
 #include "string_utils.h"
 
 using namespace lunchjet;

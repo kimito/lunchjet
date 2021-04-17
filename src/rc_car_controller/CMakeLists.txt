@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project("LunchJet User Input Device")
 
-add_library(lunchjet_rc_car_controller STATIC lunchjet_rc_car_controller.cpp)
+add_library(lunchjet_rc_car_controller STATIC rc_car_controller.cpp)
 target_link_libraries(lunchjet_rc_car_controller lunchjet_include lunchjet_user_input_device)
 target_include_directories(lunchjet_rc_car_controller PUBLIC .)
