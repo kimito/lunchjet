@@ -1,0 +1,11 @@
+[Unit]
+Description=jetbox, RC car control subsystem
+After=jetbox_momo.service
+
+[Service]
+ExecStart=/opt/jetbox/jetbox_rc_car_server
+User=root
+WorkingDirectory=/opt/jetbox
+
+[Install]
+WantedBy=multi-user.target

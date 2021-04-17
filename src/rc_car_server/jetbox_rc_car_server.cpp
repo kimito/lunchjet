@@ -29,7 +29,7 @@ void signal_handler(int signal) {
 using namespace jetbox;
 class RCCarServer : public RCCarControllerListener {
     public:
-    RCCarServer() : controller("/dev/input/event3", *this, stop_controller_thread){}
+    RCCarServer() : controller("/dev/input/event2", *this, stop_controller_thread){}
     ~RCCarServer() = default;
 
     int start() {
