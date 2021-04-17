@@ -6,7 +6,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-namespace jetbox {
+namespace lunchjet {
 
 class I2CDevice;
 
@@ -115,4 +115,4 @@ class I2CDevice {
     int adapter_fd;
 };
 
-} //namespace jetbox
+} //namespace lunchjet

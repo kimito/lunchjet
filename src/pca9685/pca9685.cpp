@@ -1,4 +1,4 @@
-#include "jetbox_pca9685.h"
+#include "lunchjet_pca9685.h"
 
 #include <cmath>
 #include <iostream>
@@ -6,7 +6,7 @@
 #include "debug_log.h"
 #include "string_utils.h"
 
-namespace jetbox {
+namespace lunchjet {
 
 const int RESOLUTION = 4096;
 const uint8_t LED_ONOFF_START_ADDRESS = 0x08;
@@ -49,4 +49,4 @@ int PCA9685::set_pulse(uint8_t channel, uint32_t width_us)
      .send();
 }
 
-}//namespace jetbox
+}//namespace lunchjet

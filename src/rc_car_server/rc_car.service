@@ -1,0 +1,11 @@
+[Unit]
+Description=lunchjet, RC car control subsystem
+After=lunchjet_momo.service
+
+[Service]
+ExecStart=/opt/lunchjet/lunchjet_rc_car_server
+User=root
+WorkingDirectory=/opt/lunchjet
+
+[Install]
+WantedBy=multi-user.target

@@ -8,7 +8,7 @@
 #include <linux/input.h>
 #include <atomic>
 
-namespace jetbox {
+namespace lunchjet {
 
 /**
  * a class that represents an user input device
@@ -89,4 +89,4 @@ class UserInputDevice {
     void notify_close();
 };
 
-}//namespace jetbox
+}//namespace lunchjet

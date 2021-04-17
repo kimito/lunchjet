@@ -2,9 +2,9 @@
 
 #include <stdint.h>
 
-#include "jetbox_i2c.h"
+#include "lunchjet_i2c.h"
 
-namespace jetbox {
+namespace lunchjet {
 
 /**
  * PCA 9685 LED controller
@@ -50,4 +50,4 @@ class PCA9685 {
     I2CDevice device;
 };
 
-}//namespace jetbox
+}//namespace lunchjet

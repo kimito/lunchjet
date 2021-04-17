@@ -1,5 +1,5 @@
 [Unit]
-Description=virtual camera for jetbox, RC car control subsystem
+Description=virtual camera for lunchjet, RC car control subsystem
 After=systemd-modules-load.service nvargus-daemon.service
 
 [Service]

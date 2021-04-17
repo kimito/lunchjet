@@ -3,9 +3,9 @@
 #include <string>
 #include <atomic>
 
-#include "jetbox_user_input_device.h"
+#include "lunchjet_user_input_device.h"
 
-namespace jetbox {
+namespace lunchjet {
 
 /**
  * a class having call back functions for recieving events about RC car controller
@@ -97,4 +97,4 @@ class RCCarController : public UserInputDevice::EventListener {
     float convert_accel_value(int value, int range_min, int range_max);
 };
 
-}//namespace jetbox
+}//namespace lunchjet

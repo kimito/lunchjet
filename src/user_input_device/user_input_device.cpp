@@ -1,4 +1,4 @@
-#include "jetbox_user_input_device.h"
+#include "lunchjet_user_input_device.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -12,7 +12,7 @@
 #include "string_utils.h"
 
 
-namespace jetbox {
+namespace lunchjet {
 
 
 UserInputDevice::UserInputDevice(const std::string &file_name, const std::atomic<bool> &stop_thread)
@@ -160,4 +160,4 @@ void UserInputDevice::listen_thread()
 }
 
 
-} //namespace jetbox
+} //namespace lunchjet

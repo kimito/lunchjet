@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project("JetBox")
+project("LunchJet")
 
 #
 # momo for send video stream from camera
@@ -24,7 +24,7 @@ add_custom_command(
 add_custom_target(check_momo_version ALL COMMAND ${MOMO_CMD} "--version" DEPENDS ${MOMO_CMD})
 
 #
-# build jetbox sources
+# build lunchjet sources
 #
 add_subdirectory(src/i2c)
 add_subdirectory(src/include)
@@ -35,7 +35,7 @@ add_subdirectory(src/rc_car_controller)
 add_subdirectory(src/rc_car_server)
 
 #
-# build jetbox tests
+# build lunchjet tests
 #
 add_subdirectory(test)
 
@@ -43,14 +43,14 @@ add_subdirectory(test)
 # install artifacts
 #
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/jetbox/momo" USE_SOURCE_PERMISSIONS)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/lunchjet/momo" USE_SOURCE_PERMISSIONS)
 
-install(FILES "jetbox_momo.service" DESTINATION "/usr/lib/systemd/system/")
-install(FILES "jetbox_virtual_camera.service" DESTINATION "/usr/lib/systemd/system/")
-install(FILES "jetbox.conf" DESTINATION "/etc/modprobe.d/")
-install(FILES "jetbox_load.conf" DESTINATION "/etc/modules-load.d/")
+install(FILES "lunchjet_momo.service" DESTINATION "/usr/lib/systemd/system/")
+install(FILES "lunchjet_virtual_camera.service" DESTINATION "/usr/lib/systemd/system/")
+install(FILES "lunchjet.conf" DESTINATION "/etc/modprobe.d/")
+install(FILES "lunchjet_load.conf" DESTINATION "/etc/modules-load.d/")
 
 install(CODE "message(\"install has finished!\")")
-install(CODE "message(\"you can enable JetBox with\")")
-install(CODE "message(\"    sudo systemctl enable --now jetbox_momo.service\")")
-install(CODE "message(\"    sudo systemctl enable --now jetbox_virtual_camera.service\")")
+install(CODE "message(\"you can enable LunchJet with\")")
+install(CODE "message(\"    sudo systemctl enable --now lunchjet_momo.service\")")
+install(CODE "message(\"    sudo systemctl enable --now lunchjet_virtual_camera.service\")")

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-project("JetBox RC Car Server")
+project("LunchJet RC Car Server")
 
-add_executable(jetbox_rc_car_server jetbox_rc_car_server.cpp)
-target_link_libraries(jetbox_rc_car_server jetbox_include jetbox_rc_car_controller jetbox_rc_car_driver)
+add_executable(lunchjet_rc_car_server lunchjet_rc_car_server.cpp)
+target_link_libraries(lunchjet_rc_car_server lunchjet_include lunchjet_rc_car_controller lunchjet_rc_car_driver)
 
-install(TARGETS jetbox_rc_car_server DESTINATION "/opt/jetbox/")
-install(FILES jetbox_rc_car.service DESTINATION /usr/lib/systemd/system/)
+install(TARGETS lunchjet_rc_car_server DESTINATION "/opt/lunchjet/")
+install(FILES lunchjet_rc_car.service DESTINATION /usr/lib/systemd/system/)
 

@@ -1,8 +1,8 @@
-#include "jetbox_rc_car_controller.h"
+#include "lunchjet_rc_car_controller.h"
 
 #include <debug_log.h>
 
-namespace jetbox {
+namespace lunchjet {
 
 
 RCCarController::RCCarController(const std::string &device_file_name,
@@ -73,4 +73,4 @@ float RCCarController::convert_accel_value(int value, int range_min, int range_m
 
 
 
-}//namespace jetbox
+}//namespace lunchjet

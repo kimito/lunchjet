@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <string.h>
 
-namespace jetbox {
+namespace lunchjet {
 
 /**
  * convers an hexadecimal value to an string
@@ -51,4 +51,4 @@ inline uint8_t str2hex_u8(const char *str)
 }
 
 
-} //namespace jetbox
+} //namespace lunchjet

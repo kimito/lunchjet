@@ -1,4 +1,4 @@
-#include "jetbox_i2c.h"
+#include "lunchjet_i2c.h"
 
 #include <iostream>
 #include <string.h>
@@ -16,7 +16,7 @@
 #include "string_utils.h"
 
 
-namespace jetbox {
+namespace lunchjet {
 
 i2c_msg I2CWriteCommnand::msg() {
     return {device_address, 0, static_cast<uint16_t>(data.size()), data.data()};
@@ -96,4 +96,4 @@ I2CDevice::~I2CDevice()
 
 
 
-} //namespace jetbox
+} //namespace lunchjet

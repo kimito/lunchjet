@@ -1,8 +1,8 @@
 #pragma once
 
-#include "jetbox_pca9685.h"
+#include "lunchjet_pca9685.h"
 
-namespace jetbox {
+namespace lunchjet {
 
 /**
  * a class to drive RC car
@@ -43,4 +43,4 @@ class RCCarDriver {
     PCA9685 driver;
 };
 
-}//namespace jetbox
+}//namespace lunchjet

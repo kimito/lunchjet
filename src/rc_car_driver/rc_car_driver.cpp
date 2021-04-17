@@ -1,6 +1,6 @@
-#include "jetbox_rc_car_driver.h"
+#include "lunchjet_rc_car_driver.h"
 
-namespace jetbox {
+namespace lunchjet {
 
 enum RC_CAR_CH {
     STEER_SERVO = 0,
@@ -61,4 +61,4 @@ int RCCarDriver::stop()
     driver.set_pulse(DRIVE_MOTOR, NEUTRAL_PULSE_WIDTH_US);
 }
 
-}//namespace jetbox
+}//namespace lunchjet

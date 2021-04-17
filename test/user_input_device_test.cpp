@@ -1,4 +1,4 @@
-#include "jetbox_user_input_device.h"
+#include "lunchjet_user_input_device.h"
 
 #include <iostream>
 #include <linux/input.h>
@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 
-using namespace jetbox;
+using namespace lunchjet;
 
 namespace {
 

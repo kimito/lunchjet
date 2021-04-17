@@ -1,4 +1,4 @@
-#include "jetbox_rc_car_controller.h"
+#include "lunchjet_rc_car_controller.h"
 
 #include <iostream>
 #include <linux/input.h>
@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 
-using namespace jetbox;
+using namespace lunchjet;
 
 namespace {
 
@@ -21,7 +21,7 @@ void signal_handler(int signal) {
 
 }
 
-using namespace jetbox;
+using namespace lunchjet;
 
 class ControllerListener : public RCCarControllerListener {
     void on_change_steering(float value) override {

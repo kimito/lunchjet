@@ -3,15 +3,15 @@
 #include <syslog.h>
 #include <string.h>
 
-#include "jetbox_i2c.h"
+#include "lunchjet_i2c.h"
 #include "string_utils.h"
 
-using namespace jetbox;
+using namespace lunchjet;
 
 int main(int argc, const char *argv[])
 {
     //
-    // This program tests I2C by doing read-write-verify with jetbox::I2CDevice
+    // This program tests I2C by doing read-write-verify with lunchjet::I2CDevice
     //
 
     if(argc < 5) {

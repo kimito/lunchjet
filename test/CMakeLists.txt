@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
-project("JetBox Test")
+project("LunchJet Test")
 
 add_executable(i2c_verify_test i2c_verify_test.cpp)
-target_link_libraries(i2c_verify_test jetbox_i2c jetbox_include)
+target_link_libraries(i2c_verify_test lunchjet_i2c lunchjet_include)
 
 add_executable(pca9685_test pca9685_test.cpp)
-target_link_libraries(pca9685_test jetbox_pca9685)
+target_link_libraries(pca9685_test lunchjet_pca9685)
 
 add_executable(rc_car_driver_test rc_car_driver_test.cpp)
-target_link_libraries(rc_car_driver_test jetbox_rc_car_driver)
+target_link_libraries(rc_car_driver_test lunchjet_rc_car_driver)
 
 add_executable(user_input_device_test user_input_device_test.cpp)
-target_link_libraries(user_input_device_test jetbox_user_input_device)
+target_link_libraries(user_input_device_test lunchjet_user_input_device)
 
 add_executable(rc_car_controller_test rc_car_controller_test.cpp)
-target_link_libraries(rc_car_controller_test jetbox_rc_car_controller)
+target_link_libraries(rc_car_controller_test lunchjet_rc_car_controller)

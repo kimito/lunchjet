@@ -1,0 +1,12 @@
+[Unit]
+Description=momo for lunchjet, RC car control subsystem
+After=network.target lunchjet_virtual_camera.service
+
+[Service]
+ExecStartPre=/bin/sleep 10
+ExecStart=/opt/lunchjet/momo/momo --hw-mjpeg-decoder=false --video-device /dev/video1 --no-audio-device test
+User=root
+WorkingDirectory=/opt/lunchjet/momo
+
+[Install]
+WantedBy=multi-user.target

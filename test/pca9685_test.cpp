@@ -1,9 +1,9 @@
-#include "jetbox_pca9685.h"
+#include "lunchjet_pca9685.h"
 
 #include <iostream>
 #include <thread>
 
-using namespace jetbox;
+using namespace lunchjet;
 
 int main(int argc, const char *argv[])
 {

@@ -7,12 +7,12 @@
 #include <unistd.h>
 #include <thread>
 
-#include "jetbox_rc_car_driver.h"
-#include "jetbox_rc_car_controller.h"
+#include "lunchjet_rc_car_driver.h"
+#include "lunchjet_rc_car_controller.h"
 #include "debug_log.h"
 #include "string_utils.h"
 
-using namespace jetbox;
+using namespace lunchjet;
 
 
 namespace {
@@ -26,7 +26,7 @@ void signal_handler(int signal) {
 }
 
 
-using namespace jetbox;
+using namespace lunchjet;
 class RCCarServer : public RCCarControllerListener {
     public:
     RCCarServer() : controller("/dev/input/event2", *this, stop_controller_thread){}
