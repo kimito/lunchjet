@@ -5,6 +5,19 @@
 
 ![Lunch Box](https://www.tamiya.com/english/products/58347lunchbox/top.jpg)
 
+# system components
+
+![system diagram](doc/img/lunchjet_system_summary.png)
+
+# prerequisite
+
+[v2l4loopback](https://github.com/umlaeute/v4l2loopback) is needed to run the LunchJet.
+```bash
+$ git clone https://github.com/umlaeute/v4l2loopback
+$ cd v4l2loopback
+$ make && sudo make install
+```
+
 # build and install
 
 ```bash
