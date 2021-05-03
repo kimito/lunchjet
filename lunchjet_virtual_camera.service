@@ -3,7 +3,7 @@ Description=virtual camera for lunchjet, RC car control subsystem
 After=systemd-modules-load.service nvargus-daemon.service
 
 [Service]
-ExecStart=/usr/bin/gst-launch-1.0 -v nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=NV12, width=1280, height=720, framerate=30/1' ! nvvidconv flip-method=2 ! 'video/x-raw, format=I420, width=1280, height=720, framerate=30/1' ! tee name=t ! queue ! identity drop-allocation=1 ! v4l2sink device=/dev/video1 t. ! queue ! identity drop-allocation=1 ! v4l2sink device=/dev/video2
+ExecStart=/usr/bin/gst-launch-1.0 -v nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=NV12, width=1280, height=720, framerate=30/1' ! tee name=t ! queue ! nvvidconv flip-method=2 ! 'video/x-raw, format=I420, width=1280, height=720' ! identity drop-allocation=1 ! v4l2sink device=/dev/video1 t. ! queue ! nvvidconv flip-method=2 ! 'video/x-raw, format=I420, width=640, height=360' ! identity drop-allocation=1 ! v4l2sink device=/dev/video2
 User=root
 
 [Install]
