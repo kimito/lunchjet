@@ -1,0 +1,24 @@
+@startuml
+rectangle "Jetson Nano" as jetson
+rectangle “Steering Servo” as steer
+rectangle ESC
+rectangle "DC motor” as dcmotor
+rectangle “RC car battery” as rcbat
+rectangle “portable phone charger” as bat
+rectangle PCA9865
+rectangle “Raspberry Pi camera v2” as cam
+rectangle “Game Pad” as gamepad
+rectangle "Macbook Pro" as mbp
+
+bat -- jetson : 5V
+cam - jetson : MIPI CSI-2
+jetson .. gamepad : bluetooth
+jetson - PCA9865 : I2C(5V)
+PCA9865 - ESC : RC PWM(6V)
+PCA9865 - steer : RC PWM(6V)
+ESC -[hidden]- steer
+ESC - dcmotor : PWM(6V)
+rcbat -do- ESC : 7.2V
+jetson .do. mbp : Wi-Fi
+cam -[hidden]- mbp
+@enduml
