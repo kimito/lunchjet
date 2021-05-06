@@ -15,3 +15,8 @@ target_link_libraries(user_input_device_test lunchjet_user_input_device)
 
 add_executable(rc_car_controller_test rc_car_controller_test.cpp)
 target_link_libraries(rc_car_controller_test lunchjet_rc_car_controller)
+
+add_executable(video_device_test video_device_test.cpp)
+find_package( OpenCV REQUIRED )
+target_include_directories(video_device_test PRIVATE ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(video_device_test lunchjet_include ${OpenCV_LIBS})
