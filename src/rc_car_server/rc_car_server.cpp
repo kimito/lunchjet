@@ -67,7 +67,8 @@ void RCCarServer::on_close()
 void RCCarServer::handle_video(cv::Mat &image)
 {
     if(is_connected && std::abs(speed) > 0.1) {
-        std::cout << "image resolution: " << image.cols << "x" << image.rows << std::endl;
+        std::cout << "log image dir: " << LOG_IMAGE_DIR << std::endl;
+        std::cout << "log annot dir: " << LOG_ANNOTAION_DIR << std::endl;
     }
 }
 
