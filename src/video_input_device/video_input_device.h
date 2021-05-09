@@ -10,9 +10,7 @@ namespace lunchjet {
 class VideoInputDevice {
     public:
     /**
-     * function type for event handle with saved a image
-     * frist argument(const std::string&) is for file name
-     * second argment(bool) is for whether processing was successful
+     * function type for event handle with captured a image
      */
     using ProcessingFunction = std::function<void(cv::Mat &)>;
 
@@ -25,7 +23,16 @@ class VideoInputDevice {
 
     ~VideoInputDevice();
 
+    /**
+     * start capturing
+     * @return true if successful
+     */
     bool start_capture();
+
+    /**
+     * stop capturing
+     * @return true if successful
+     */
     bool stop_capture();
 
     private:
