@@ -44,8 +44,6 @@ void VideoInputDevice::main_loop()
     cv::VideoCapture device(device_index);
     cv::Mat mat;
 
-    int frames = 0;
-
     while(!stop_thread.load()) {
         if(device.grab()) {
             device.retrieve(mat);
