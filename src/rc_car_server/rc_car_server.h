@@ -4,6 +4,7 @@
 
 #include "rc_car_controller.h"
 #include "rc_car_driver.h"
+#include "video_input_device.h"
 #include "debug_log.h"
 #include "string_utils.h"
 
@@ -32,7 +33,12 @@ class RCCarServer : public RCCarControllerListener {
     private:
     RCCarDriver driver;
     RCCarController controller;
-    bool is_going_back = false;
+    VideoInputDevice video_device;
+    bool is_going_back;
+    std::atomic<bool> is_connected;
+    std::atomic<float> steering, speed;
+
+    void handle_video(cv::Mat &image);
 };
 
  
