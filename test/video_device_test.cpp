@@ -1,34 +1,25 @@
 #include <iostream>
-#include <opencv2/videoio.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include <chrono>
+#include <thread>
 
-#include "performance_count.h"
+#include "video_input_device.h"
+#include "string_utils.h"
 
+using namespace lunchjet;
 
 int main(int argc, const char *argv[])
 {
-    int device_num = 2;
-    cv::VideoCapture video(device_num);
+    std::cout << "start " << std::string(argv[0]) << std::endl;
 
-    if( !video.isOpened() ) {
-        std::cerr << "cannot open video device: " << device_num << std::endl;
+    VideoInputDevice device(2,
+    [](auto mat){std::cout << "complete: " << mat.cols << "x" << mat.rows  << std::endl;});
+
+    if(!device.start_capture()) {
+        std::cerr << "start_capture() failed: " << errno2str() << std::endl;
         return -1;
     }
 
-    cv::Mat image;
-
-    for(int i = 0; i < 10; ++i)
-    {
-        auto start = time_now();
-        if( !video.read(image) ) {
-            std::cerr << "cannot grab any image" << std::endl;
-            return -1;
-        }
-        std::cout << "time to read: " << duration_ms_from(start) << std::endl;
-    }
-
-    cv::imwrite("image.jpg", image);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     return 0;
 }
