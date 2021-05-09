@@ -37,7 +37,7 @@ class RCCarServer : public RCCarControllerListener {
     }
 
     void on_connect(){
-        std::cout << "controller connected" << std::endl;
+        debug_notice("controller connected");
     };
 
     void on_change_steering(float value) override {
@@ -63,7 +63,7 @@ class RCCarServer : public RCCarControllerListener {
     }
 
     void on_close() {
-        std::cout << "controller disconnected" << std::endl;
+        debug_notice("controller disconnected");
     }
 
     private:
@@ -83,13 +83,13 @@ int main(int argc, const char *argv[])
 
     RCCarServer server;
 
-    std::cout << "starting server..." << std::endl;
+    debug_notice("starting server...");
 
     server.start();
-    std::cout << "server started" << std::endl;
+    debug_notice("server started");
 
     pause();
-    std::cout << "terminating server..." << std::endl;
+    debug_notice("terminating server...");
 
     return 0;
 }
