@@ -2,8 +2,10 @@
 
 #include <cmath>
 #include <iostream>
+#include <time.h>
 
 #include "debug_log.h"
+
 
 
 namespace lunchjet {
@@ -64,12 +66,34 @@ void RCCarServer::on_close()
     is_connected = false;
 }
 
+namespace {
+    std::string get_log_filename_base() {
+        struct timespec ts;
+        clock_gettime(CLOCK_REALTIME_COARSE, &ts);
+        struct tm _tm;
+        localtime_r(&(ts.tv_sec), &_tm);
+
+        char time_str[20];
+        strftime(time_str, sizeof(time_str), "%Y%m%d%H%M%S",&_tm);
+
+        char ms_str[5];
+        snprintf(ms_str, sizeof(ms_str), "%03ld", (ts.tv_nsec / (1000 * 1000)));
+
+        return std::string(time_str) + std::string(ms_str);
+    }
+}
+
 void RCCarServer::handle_video(cv::Mat &image)
 {
-    if(is_connected && std::abs(speed) > 0.1) {
-        std::cout << "log image dir: " << LOG_IMAGE_DIR << std::endl;
-        std::cout << "log annot dir: " << LOG_ANNOTAION_DIR << std::endl;
+    if(!is_connected || std::abs(speed) < 0.1) {
+        return;
     }
+
+    std::string file_name = get_log_filename_base();
+    std::cout << "file base : " << file_name << std::endl;
+
+    // std::cout << "log image dir: " << LOG_IMAGE_DIR << std::endl;
+    // std::cout << "log annot dir: " << LOG_ANNOTAION_DIR << std::endl;
 }
 
 
