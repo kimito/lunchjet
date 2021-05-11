@@ -1,8 +1,8 @@
 #include "rc_car_server.h"
 
 #include <cmath>
-#include <iostream>
 #include <time.h>
+#include <fstream>
 
 #include "debug_log.h"
 
@@ -74,10 +74,10 @@ namespace {
         localtime_r(&(ts.tv_sec), &_tm);
 
         char time_str[20];
-        strftime(time_str, sizeof(time_str), "%Y%m%d%H%M%S",&_tm);
+        strftime(time_str, sizeof(time_str), "%Y_%m_%d_%H_%M_%S",&_tm);
 
         char ms_str[5];
-        snprintf(ms_str, sizeof(ms_str), "%03ld", (ts.tv_nsec / (1000 * 1000)));
+        snprintf(ms_str, sizeof(ms_str), "_%03ld", (ts.tv_nsec / (1000 * 1000)));
 
         return std::string(time_str) + std::string(ms_str);
     }
@@ -89,11 +89,17 @@ void RCCarServer::handle_video(cv::Mat &image)
         return;
     }
 
-    std::string file_name = get_log_filename_base();
-    std::cout << "file base : " << file_name << std::endl;
+    std::string file_base = get_log_filename_base();
+    std::string image_file_name =  file_base + ".jpg";
 
-    // std::cout << "log image dir: " << LOG_IMAGE_DIR << std::endl;
-    // std::cout << "log annot dir: " << LOG_ANNOTAION_DIR << std::endl;
+    std::ofstream ofs_drive(std::string(LOG_ANNOTAION_DIR) + "/" + file_base + ".log");
+    if(!ofs_drive) {
+        debug_err("annotation log write failed");
+        return;
+    }
+    ofs_drive << image_file_name << " " << steering << " " << speed << std::endl;
+
+    cv::imwrite(std::string(LOG_IMAGE_DIR) + "/" + image_file_name, image);
 }
 
 
