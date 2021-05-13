@@ -1,0 +1,65 @@
+@startuml
+title data flow diagram
+
+object nvarguscamerasrc <<gst-element>>
+object tee <<gst-element>>
+
+nvarguscamerasrc -> tee : NV12\n1280x720\n30FPS
+
+object "queue" as q1 <<gst-element>>
+
+object "nvvidconv" as nvv1 <<gst-element>> {
+    flip-method=2
+}
+object "identity" as id1 <<gst-element>> {
+    drop-allocation=1
+}
+object "v4l2sink" as vsink1 <<gst-element>> {
+    device=/dev/video1
+}
+object momo <<WebRTC client>>
+
+tee -> q1
+q1 -> nvv1
+nvv1 -> id1 : I420
+id1 -> vsink1
+vsink1 .> momo
+
+object "queue" as q2 <<gst-element>>
+
+object "nvvidconv" as nvv2 <<gst-element>> {
+    flip-method=2
+}
+object "identity" as id2 <<gst-element>> {
+    drop-allocation=1
+}
+object "v4l2sink" as vsink2 <<gst-element>> {
+    device=/dev/video2
+}
+
+tee -> q2
+q2 -> nvv2
+nvv2 -> id2 : I420\n360x240\n15FPS
+id2 -> vsink2
+
+q1 -[hidden]- q2
+
+
+object "gamepad" as controller <<device file>> {
+    path=/dev/input/event*
+}
+object "motor driver" as driver <<device file>> {
+    path=/dev/i2c-*
+}
+object "RC car server" as server
+object "traning data" as train_data <<directory>> {
+    path=/var/log/lunchjet/
+}
+vsink2 .> server
+controller .> server
+server .> driver
+server .> train_data : images\nsteering directions\nspeeds
+
+vsink2 -[hidden]- controller
+driver -[hidden]- train_data
+@enduml
