@@ -9,6 +9,10 @@
 
 ![system diagram](doc/img/lunchjet_system_summary.png)
 
+# data flow diagram
+
+![data flow diagram](doc/img/dataflow.png)
+
 # prerequisite
 
 [v2l4loopback](https://github.com/umlaeute/v4l2loopback) is needed to run the LunchJet.
