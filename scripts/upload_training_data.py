@@ -50,9 +50,9 @@ class GoogleDrive:
 
     def create_file(self, name, content_file_name=None, *, mime_type=None, parent_dir_id=None):
         body = {'name' : name}
-        if(parent_dir_id is not None):
+        if parent_dir_id is not None:
             body['parents'] = [parent_dir_id]
-        if(content_file_name is None):
+        if content_file_name is None:
             content_file_name = name
         file = self.service.files().create(
             body = body,
@@ -66,12 +66,35 @@ class GoogleDrive:
             'name' : name,
             'mimeType': 'application/vnd.google-apps.folder'
         }
-        if(parent_dir_id is not None):
+        if parent_dir_id is not None:
             body['parents'] = [parent_dir_id]
         file = self.service.files().create(body = body).execute()
         return file
 
-        
+    def find_files(self, name, *, mime_type=None, parent_dir_id=None):
+        qs = []
+        if mime_type is not None:
+            qs.append("mimeType='{}'".format(mime_type))
+        if parent_dir_id is not None:
+            qs.append("'{}' in parents".format(parent_dir_id))
+        q = None
+        if len(qs) > 0:
+            q = ' and '.join(qs)
+        page_token = None
+        files = []
+        while True:
+            response = self.service.files().list(q=q,
+                                                spaces='drive',
+                                                fields='nextPageToken, files(id, name)',
+                                                pageToken=page_token).execute()
+            for file in response.get('files', []):
+                files.append(file)
+            page_token = response.get('nextPageToken', None)
+            if page_token is None:
+                break
+        return files
+
+
 def main():
 
     gdrive = GoogleDrive(client_secret_file='credentials.json', token_file='token.json')
@@ -81,6 +104,9 @@ def main():
 
     file = gdrive.create_file('test.txt', parent_dir_id = dir['id'])
     print(str(file))
+
+    files = gdrive.find_files("test.txt", parent_dir_id=dir['id'])
+    print(str(files))
 
 
 if __name__ == '__main__':
