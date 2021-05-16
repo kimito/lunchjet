@@ -48,33 +48,40 @@ class GoogleDrive:
         
         return creds
 
-    def create_file(self, name, content_file_name=None, mime_type=None):
+    def create_file(self, name, content_file_name=None, *, mime_type=None, parent_dir_id=None):
+        body = {'name' : name}
+        if(parent_dir_id is not None):
+            body['parents'] = [parent_dir_id]
         if(content_file_name is None):
             content_file_name = name
         file = self.service.files().create(
-            body = {'name' : name},
+            body = body,
             media_body = content_file_name,
             media_mime_type = mime_type
         ).execute()
         return file
 
-    def get_directory(self, name, *, parent_dir_id=None, force_create=True):
+    def create_directory(self, name, *, parent_dir_id=None):
         body = {
             'name' : name,
             'mimeType': 'application/vnd.google-apps.folder'
         }
         if(parent_dir_id is not None):
             body['parents'] = [parent_dir_id]
-
-        file = self.service.files().create(body=body).execute()
+        file = self.service.files().create(body = body).execute()
         return file
 
         
 def main():
 
     gdrive = GoogleDrive(client_secret_file='credentials.json', token_file='token.json')
-    file = gdrive.create_file('test.txt')
+
+    dir = gdrive.create_directory('test')
+    print(str(dir))
+
+    file = gdrive.create_file('test.txt', parent_dir_id = dir['id'])
     print(str(file))
+
 
 if __name__ == '__main__':
     main()
