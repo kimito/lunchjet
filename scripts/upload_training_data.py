@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START drive_quickstart]
 from __future__ import print_function
 import os.path
 from googleapiclient.discovery import build
@@ -21,7 +20,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ['https://www.googleapis.com/auth/drive']
 
 def main():
     """Shows basic usage of the Drive v3 API.
@@ -47,18 +46,13 @@ def main():
 
     service = build('drive', 'v3', credentials=creds)
 
-    # Call the Drive v3 API
-    results = service.files().list(
-        pageSize=10, fields="nextPageToken, files(id, name)").execute()
-    items = results.get('files', [])
+    file = service.files().create(
+        body = { 'name' : 'text.txt'},
+        media_body='test.txt',
+        media_mime_type='text/plain'
+    ).execute()
 
-    if not items:
-        print('No files found.')
-    else:
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
+    print(str(file))
 
 if __name__ == '__main__':
     main()
-# [END drive_quickstart]
