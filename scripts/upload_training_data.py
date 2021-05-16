@@ -75,7 +75,7 @@ class GoogleDrive:
         return file
 
     def find_files(self, name, *, mime_type=None, parent_dir_id=None):
-        qs = []
+        qs = ["name = '{}'".format(name)]
         if mime_type is not None:
             qs.append("mimeType='{}'".format(mime_type))
         if parent_dir_id is not None:
@@ -98,18 +98,31 @@ class GoogleDrive:
         return files
 
     def get_directory(self, name, *, parent_dir_id=None, force_create=True):
-        dir = self.find_files(name, mime_type=DIR_MTYPE, parent_dir_id=parent_dir_id)
-        if dir is not None:
-            return dir
-        if force_create is False and len(dir) = 0:
-            return None
+        dir_names = name.split('/')
+        print(str(dir_names))
+        ret = None
+        pdi = parent_dir_id
+        for dir_name in dir_names:
+            print("dir : {}".format(dir_name))
+            dir = self.find_files(dir_name, mime_type=DIR_MTYPE, parent_dir_id=pdi)
+            if dir is not None and len(dir) > 0:
+                ret = dir[0]
+                print("exist {} id : {}".format(dir_name, ret['id']))
+            else:
+                if force_create is True:
+                    ret = self.create_directory(dir_name, parent_dir_id=pdi)
+                    print('create dir : {} id : {}'.format(dir_name, ret['id']))
+                else:
+                    return None
+            pdi = ret['id']
+        return ret
         
 
 def main():
 
     gdrive = GoogleDrive(client_secret_file='credentials.json', token_file='token.json')
 
-    dir = gdrive.create_directory('test')
+    dir = gdrive.get_directory('lunchbox/annotations')
     print(str(dir))
 
     file = gdrive.create_file('test.txt', parent_dir_id = dir['id'])
