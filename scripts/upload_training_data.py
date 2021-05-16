@@ -32,12 +32,8 @@ class GoogleDrive:
     
     def _get_cred(self, client_secret_file, token_file):
         creds = None
-        # The file token.json stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
         if os.path.exists(token_file):
             creds = Credentials.from_authorized_user_file(token_file, SCOPES)
-        # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
@@ -45,7 +41,6 @@ class GoogleDrive:
                 flow = InstalledAppFlow.from_client_secrets_file(
                     client_secret_file, SCOPES)
                 creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
             with open(token_file, 'w') as token:
                 token.write(creds.to_json())
         
@@ -75,7 +70,9 @@ class GoogleDrive:
         return file
 
     def find_files(self, name, *, mime_type=None, parent_dir_id=None):
-        qs = ["name = '{}'".format(name)]
+        qs = [
+            "name = '{}'".format(name),
+            "trashed = false"] #exclude entries in trash
         if mime_type is not None:
             qs.append("mimeType='{}'".format(mime_type))
         if parent_dir_id is not None:
