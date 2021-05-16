@@ -47,7 +47,13 @@ class GoogleDrive:
         return creds
 
     def create_file(self, name, content_file_name=None, *, mime_type=None, parent_dir_id=None):
-        body = {'name' : name}
+        paths = name.split('/')
+        file_name = paths[-1]
+        dir = '/'.join(paths[:-1])
+        print('dir : {}'.format(dir))
+        body = {'name' : file_name}
+        if dir is not None and len(dir) > 0:
+            parent_dir_id = self.get_directory(dir, parent_dir_id=parent_dir_id).get('id')
         if parent_dir_id is not None:
             body['parents'] = [parent_dir_id]
         if content_file_name is None:
@@ -119,11 +125,11 @@ def main():
 
     gdrive = GoogleDrive(client_secret_file='credentials.json', token_file='token.json')
 
+    file = gdrive.create_file('lunchbox/annotations/test.txt', 'test.txt')
+    print(str(file))
+
     dir = gdrive.get_directory('lunchbox/annotations')
     print(str(dir))
-
-    file = gdrive.create_file('test.txt', parent_dir_id = dir['id'])
-    print(str(file))
 
     files = gdrive.find_files("test.txt", parent_dir_id=dir['id'])
     print(str(files))
