@@ -1,3 +1,6 @@
 .vscode
 
 build
+
+scripts/credentials.json
+scripts/token.json
