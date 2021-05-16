@@ -22,6 +22,9 @@ from google.oauth2.credentials import Credentials
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
+#mime type of Google Drive's directory
+DIR_MTYPE = 'application/vnd.google-apps.folder'
+
 class GoogleDrive:
     def __init__(self, client_secret_file, token_file):
         self.creds = self._get_cred(client_secret_file=client_secret_file, token_file=token_file)
@@ -64,7 +67,7 @@ class GoogleDrive:
     def create_directory(self, name, *, parent_dir_id=None):
         body = {
             'name' : name,
-            'mimeType': 'application/vnd.google-apps.folder'
+            'mimeType': DIR_MTYPE
         }
         if parent_dir_id is not None:
             body['parents'] = [parent_dir_id]
@@ -94,6 +97,13 @@ class GoogleDrive:
                 break
         return files
 
+    def get_directory(self, name, *, parent_dir_id=None, force_create=True):
+        dir = self.find_files(name, mime_type=DIR_MTYPE, parent_dir_id=parent_dir_id)
+        if dir is not None:
+            return dir
+        if force_create is False and len(dir) = 0:
+            return None
+        
 
 def main():
 
