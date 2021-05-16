@@ -50,7 +50,6 @@ class GoogleDrive:
         paths = name.split('/')
         file_name = paths[-1]
         dir = '/'.join(paths[:-1])
-        print('dir : {}'.format(dir))
         body = {'name' : file_name}
         if dir is not None and len(dir) > 0:
             parent_dir_id = self.get_directory(dir, parent_dir_id=parent_dir_id).get('id')
@@ -102,19 +101,15 @@ class GoogleDrive:
 
     def get_directory(self, name, *, parent_dir_id=None, force_create=True):
         dir_names = name.split('/')
-        print(str(dir_names))
         ret = None
         pdi = parent_dir_id
         for dir_name in dir_names:
-            print("dir : {}".format(dir_name))
             dir = self.find_files(dir_name, mime_type=DIR_MTYPE, parent_dir_id=pdi)
             if dir is not None and len(dir) > 0:
                 ret = dir[0]
-                print("exist {} id : {}".format(dir_name, ret['id']))
             else:
                 if force_create is True:
                     ret = self.create_directory(dir_name, parent_dir_id=pdi)
-                    print('create dir : {} id : {}'.format(dir_name, ret['id']))
                 else:
                     return None
             pdi = ret['id']
