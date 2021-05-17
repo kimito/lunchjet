@@ -18,6 +18,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from googleapiclient.http import MediaFileUpload
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -57,9 +58,10 @@ class GoogleDrive:
             body['parents'] = [parent_dir_id]
         if content_file_name is None:
             content_file_name = name
+        media = MediaFileUpload(content_file_name, mimetype=mime_type, resumable=True)
         file = self.service.files().create(
             body = body,
-            media_body = content_file_name,
+            media_body = media,
             media_mime_type = mime_type
         ).execute()
         return file
@@ -122,13 +124,6 @@ def main():
 
     file = gdrive.create_file('lunchbox/annotations/test.txt', 'test.txt')
     print(str(file))
-
-    dir = gdrive.get_directory('lunchbox/annotations')
-    print(str(dir))
-
-    files = gdrive.find_files("test.txt", parent_dir_id=dir['id'])
-    print(str(files))
-
 
 if __name__ == '__main__':
     main()
