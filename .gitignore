@@ -5,3 +5,4 @@ scripts/lunchbox/__pycache__
 
 scripts/credentials.json
 scripts/token.json
+train_*.tar.gz
