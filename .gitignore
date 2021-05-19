@@ -1,6 +1,7 @@
 .vscode
 
 build
+scripts/lunchbox/__pycache__
 
 scripts/credentials.json
 scripts/token.json
