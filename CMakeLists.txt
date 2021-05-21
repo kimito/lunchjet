@@ -36,6 +36,11 @@ add_subdirectory(src/rc_car_server)
 add_subdirectory(src/video_input_device)
 
 #
+# scripts
+#
+add_subdirectory(scripts)
+
+#
 # build lunchjet tests
 #
 add_subdirectory(test)

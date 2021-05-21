@@ -2,7 +2,7 @@ if '__file__' in globals():
     import os, sys
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from lunchbox import GoogleDrive
+from lunchjet import GoogleDrive
 import time
 import tarfile
 from argparse import ArgumentParser
