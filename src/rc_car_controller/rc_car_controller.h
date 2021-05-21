@@ -42,10 +42,16 @@ class RCCarControllerListener {
     virtual void on_change_back(int value) = 0;
 
     /**
+     * an event handler for selecting input (press select key)
+     * between AI and persons
+     */
+    virtual void on_select(){}
+
+    /**
      * an event handler for closing connnection with the controller
      * (the class will retry to wait new connection)
      */
-    virtual void on_close(){}
+    virtual void on_close(){}    
 };
 
 /**

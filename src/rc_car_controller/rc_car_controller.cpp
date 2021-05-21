@@ -14,7 +14,8 @@ RCCarController::RCCarController(const std::string &device_file_name,
     device.add_listener({
      {EV_ABS, ABS_X},
      {EV_ABS, ABS_RZ},
-     {EV_KEY, BTN_SOUTH}},
+     {EV_KEY, BTN_SOUTH},
+     {EV_KEY, BTN_TL}},
      *this);
 }
 
@@ -47,6 +48,9 @@ void RCCarController::on_receive(const struct input_event &event)
             break;
         case BTN_SOUTH:
             listener.on_change_back(event.value);
+            break;
+        case BTN_TL:
+            listener.on_select();
             break;
         default:
             debug_warning("unknown code:%d value:%d", event.code, event.value);

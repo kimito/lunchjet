@@ -28,6 +28,7 @@ class RCCarServer : public RCCarControllerListener {
     void on_change_steering(float value) override;
     void on_change_accel(float value) override;
     void on_change_back(int value) override;
+    void on_select() override;
     void on_close() override;
 
     private:

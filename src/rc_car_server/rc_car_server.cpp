@@ -60,6 +60,11 @@ void RCCarServer::on_change_back(int value)
     }
 }
 
+void RCCarServer::on_select()
+{
+    debug_debug("pressed select button");
+}
+
 void RCCarServer::on_close()
 {
     debug_notice("controller disconnected");
