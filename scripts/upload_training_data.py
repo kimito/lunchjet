@@ -41,6 +41,7 @@ def main():
     gdrive = GoogleDrive(client_secret_file='/etc/lunchjet/credentials.json', token_file='/etc/lunchjet/token.json')
     file = gdrive.create_file('lunchbox/' + tarball_name, tarball_name)
     print('upload a file to gdrive : {}'.format(str(file)))
+    pathlib.Path(tarball_name).unlink()
 
     # delete files if needed
     if args.rm:

@@ -73,6 +73,7 @@ void RCCarServer::on_select()
         std::string shell_param = "PYTHONPATH=" + vars["PYTHONPATH"] + 
             " python3 /opt/lunchjet/scripts/upload_training_data.py"
             " --root /var/log/lunchjet --rm /var/log/lunchjet";
+        debug_notice("launch : %s", shell_param.c_str());
         int res = system(shell_param.c_str());
         if(res == 0) {
             debug_notice("finish uploading");
