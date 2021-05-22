@@ -49,12 +49,16 @@ add_subdirectory(test)
 # install artifacts
 #
 
+install(DIRECTORY DESTINATION /etc/lunchjet)
+
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MOMO_DIR} DESTINATION "/opt/lunchjet/momo" USE_SOURCE_PERMISSIONS)
 
 install(FILES "lunchjet_momo.service" DESTINATION "/usr/lib/systemd/system/")
 install(FILES "lunchjet_virtual_camera.service" DESTINATION "/usr/lib/systemd/system/")
 install(FILES "lunchjet.conf" DESTINATION "/etc/modprobe.d/")
 install(FILES "lunchjet_load.conf" DESTINATION "/etc/modules-load.d/")
+
+install(FILES lunchjet_template.conf DESTINATION /etc/lunchjet)
 
 install(CODE "message(\"install has finished!\")")
 install(CODE "message(\"you can enable LunchJet with\")")

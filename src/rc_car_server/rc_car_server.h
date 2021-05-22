@@ -7,6 +7,7 @@
 #include "video_input_device.h"
 #include "debug_log.h"
 #include "string_utils.h"
+#include "setting_variables.h"
 
 namespace lunchjet
 {
@@ -38,6 +39,8 @@ class RCCarServer : public RCCarControllerListener {
     bool is_going_back;
     std::atomic<bool> is_connected;
     std::atomic<float> steering, speed;
+    bool is_manual_drived;
+    SettingVariables vars;
 
     void handle_video(cv::Mat &image);
 };

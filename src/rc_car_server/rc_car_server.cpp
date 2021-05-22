@@ -3,19 +3,24 @@
 #include <cmath>
 #include <time.h>
 #include <fstream>
+#include <stdlib.h>
+#include <string.h>
+#include <map>
+#include <algorithm>
 
 #include "debug_log.h"
 
 
-
 namespace lunchjet {
+
 
 RCCarServer::RCCarServer(std::atomic<bool> &stop_controller_thread)
  : controller("/dev/input/event2", *this, stop_controller_thread),
    video_device(2, [this](auto mat){handle_video(mat);}),
    is_going_back(false),
    is_connected(false),
-   steering(0.0f), speed(0.0f)
+   steering(0.0f), speed(0.0f),
+   is_manual_drived(true)
 {
     video_device.start_capture();
 }
@@ -63,6 +68,21 @@ void RCCarServer::on_change_back(int value)
 void RCCarServer::on_select()
 {
     debug_debug("pressed select button");
+    if(is_manual_drived) {
+        debug_notice("stating upload control logs to Google drive...");
+        std::string shell_param = "PYTHONPATH=" + vars["PYTHONPATH"] + 
+            " python3 /opt/lunchjet/scripts/upload_training_data.py"
+            " --root /var/log/lunchjet --rm /var/log/lunchjet";
+        int res = system(shell_param.c_str());
+        if(res == 0) {
+            debug_notice("finish uploading");
+        }
+        else {
+            debug_err("uploading failed : %s", strerror(errno));
+        }
+    }
+
+    is_manual_drived != is_manual_drived;
 }
 
 void RCCarServer::on_close()

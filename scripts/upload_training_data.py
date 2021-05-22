@@ -38,7 +38,7 @@ def main():
     print('create {}'.format(tarball_name))
 
     # upload the tarball to Google Drive
-    gdrive = GoogleDrive(client_secret_file='credentials.json', token_file='token.json')
+    gdrive = GoogleDrive(client_secret_file='/etc/lunchjet/credentials.json', token_file='/etc/lunchjet/token.json')
     file = gdrive.create_file('lunchbox/' + tarball_name, tarball_name)
     print('upload a file to gdrive : {}'.format(str(file)))
 
