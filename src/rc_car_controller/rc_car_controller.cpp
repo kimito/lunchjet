@@ -50,7 +50,9 @@ void RCCarController::on_receive(const struct input_event &event)
             listener.on_change_back(event.value);
             break;
         case BTN_TL:
-            listener.on_select();
+            if(event.value == 0) { //fire event when the key released
+                listener.on_select();
+            }
             break;
         default:
             debug_warning("unknown code:%d value:%d", event.code, event.value);
