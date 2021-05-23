@@ -62,4 +62,10 @@ server .> train_data : images\nsteering directions\nspeeds
 
 vsink2 -[hidden]- controller
 driver -[hidden]- train_data
+
+object uploader <<script>>
+object "Google Drive" as gdrive <<storage service>>
+train_data .> uploader
+uploader .> gdrive : HTTPS
+driver -[hidden] uploader
 @enduml
