@@ -26,14 +26,15 @@ def main():
     
     if args.root is None:
             args.root = str()
-    if args.root[-1] is not '/':
-        args.root += '/'
 
     # create tarball
     tarball_name = "train_{}.tar.gz".format(time.strftime('%Y_%m_%d_%H_%M_%S'))
     with tarfile.open(tarball_name, "w|gz") as archive:
         for file in args.files:
+            #if --root are there, make the file path in the archive to be relative
             relative_path = re.sub('^{}'.format(args.root), '', file)
+            relative_path = re.sub('^/', '', relative_path)
+
             archive.add(file, arcname=relative_path)
     print('create {}'.format(tarball_name))
 
