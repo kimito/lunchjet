@@ -1,0 +1,19 @@
+@startuml
+rectangle image <<tensor>>
+
+rectangle "AI model" {
+
+rectangle "backbone network" as backbone
+rectangle feature <<tensor>>
+
+image -> backbone
+backbone -> feature
+
+rectangle "head network" as head
+}
+
+rectangle "control parameters" <<tensor>> as output
+
+feature -> head
+head -> output
+@enduml
