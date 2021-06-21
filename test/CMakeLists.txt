@@ -18,3 +18,7 @@ target_link_libraries(rc_car_controller_test lunchjet_rc_car_controller)
 
 add_executable(video_device_test video_device_test.cpp)
 target_link_libraries(video_device_test lunchjet_video_input_device)
+
+add_executable(drive_detector_test drive_detector_test.cpp)
+target_link_libraries(drive_detector_test lunchjet_drive_detector)
+

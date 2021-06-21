@@ -34,6 +34,7 @@ add_subdirectory(src/user_input_device)
 add_subdirectory(src/rc_car_controller)
 add_subdirectory(src/rc_car_server)
 add_subdirectory(src/video_input_device)
+add_subdirectory(src/drive_detector)
 
 #
 # scripts
