@@ -31,9 +31,15 @@ static DriveParameter value_on_error = {0.f, 0.f};
 static const int IMAGE_HEIGHT = 240;
 static const int IMAGE_WIDTH = 360;
 
+
 DriveDetector::DriveDetector(const std::string &model_file_path)
 :engine_file_path(model_file_path),
- engine(nullptr)
+ engine(nullptr),
+ context(nullptr),
+ input_mem_size(0),
+ output_mem_size(0),
+ input_mem(nullptr),
+ output_mem(nullptr)
 {
     std::ifstream engine_file(engine_file_path, std::ios::binary);
     if (engine_file.fail())
@@ -55,15 +61,11 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
     if(engine == nullptr) {
         std::cout << "deserializeCudaEngine() failed" << std::endl;
     }
-}
 
-
-DriveParameter DriveDetector::detect(const cv::Mat &image)
-{
-    unique_ptr_for_nv<nvinfer1::IExecutionContext> context{engine->createExecutionContext()};
+    //get context
+    context.reset(engine->createExecutionContext());
     if(!context) {
         debug_err("createExecutionContext() failed");
-        return value_on_error;
     }
 
     //configure input tensor
@@ -72,13 +74,11 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     std::cout << "input index: " << input_index << std::endl;
     if(input_index == -1) {
         debug_err("getBindingIndex() for input failed: %s", input_name.c_str());
-        return value_on_error;
     }
     auto input_dims = nvinfer1::Dims4{1, IMAGE_HEIGHT, IMAGE_WIDTH, 3 /* channels */};
-    auto input_mem_size = getMemorySize(input_dims, sizeof(float));
+    input_mem_size = getMemorySize(input_dims, sizeof(float));
     if(context->setBindingDimensions(input_index, input_dims) == false) {
         debug_err("setBindingDimensions() for input failed");
-        return value_on_error;
     }
 
     //configure output tensor
@@ -86,30 +86,37 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     auto output_index = engine->getBindingIndex(output_name.c_str());
     std::cout << "output index: " << output_index << std::endl;
     if(output_index == -1) {
-        debug_err("getBindingIndex() for output failed: %s", input_name.c_str());
-        return value_on_error;
+        debug_err("getBindingIndex() for output failed: %s", output_name.c_str());
     }
     auto output_dims = context->getBindingDimensions(output_index);
     debug_debug("output dims:");
     for(int i=0;i<output_dims.nbDims;++i) {
         debug_debug("  dim %d: %d", i, output_dims.d[i]);
     }
-    auto output_mem_size = getMemorySize(output_dims, sizeof(float));
+    output_mem_size = getMemorySize(output_dims, sizeof(float));
 
     // Allocate CUDA memory for input and output bindings
-    void* input_mem{nullptr};
     if (cudaMalloc(&input_mem, input_mem_size) != cudaSuccess)
     {
         debug_err("input cuda memory allocation failed, size = %zu bytes", input_mem_size);
-        return value_on_error;
     }
-    void* output_mem{nullptr};
     if (cudaMalloc(&output_mem, output_mem_size) != cudaSuccess)
     {
         debug_err("ERROR: output cuda memory allocation failed, size = %zu bytes", output_mem_size);
-        return value_on_error;
     }
 
+}
+
+
+DriveDetector::~DriveDetector()
+{
+    cudaFree(input_mem);
+    cudaFree(output_mem);
+}
+
+
+DriveParameter DriveDetector::detect(const cv::Mat &image)
+{
     auto infer_start = time_now();
     cudaStream_t stream;
     if (cudaStreamCreate(&stream) != cudaSuccess)
@@ -145,9 +152,6 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     std::cout << "infer time: " << duration_ms_from(infer_start) << "ms" << std::endl;
 
     DriveParameter ret = {output_buffer[0], output_buffer[1]};
-
-    cudaFree(input_mem);
-    cudaFree(output_mem);
 
     return ret;
 }

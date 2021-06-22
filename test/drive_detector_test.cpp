@@ -14,8 +14,9 @@ int main(int argc, char *argv[])
     DriveDetector dcon(argv[1]);
     cv::Mat image = cv::imread(argv[2]);
 
-    auto params = dcon.detect(image);
-
-    std::cout << "parameters: steer=" << params.steering << " throtle=" << params.throtle << std::endl;
+    for(int i = 0; i < 10; ++i) {
+        auto params = dcon.detect(image);
+        std::cout << "parameters: steer=" << params.steering << " throtle=" << params.throtle << std::endl;
+    }
     return 0;
 }

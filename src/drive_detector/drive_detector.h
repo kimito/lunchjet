@@ -18,7 +18,7 @@ class DriveDetector {
     public:
 
     DriveDetector(const std::string &model_file_path);
-    ~DriveDetector() = default;
+    ~DriveDetector();
 
     DriveParameter detect(const cv::Mat &image);
 
@@ -36,6 +36,11 @@ class DriveDetector {
 
     std::string engine_file_path;
     unique_ptr_for_nv<nvinfer1::ICudaEngine> engine;
+    unique_ptr_for_nv<nvinfer1::IExecutionContext> context;
+    size_t input_mem_size;
+    size_t output_mem_size;
+    void* input_mem;
+    void* output_mem;
 };
 
 } //namespace lunchjet
