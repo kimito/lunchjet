@@ -6,8 +6,8 @@
 
 #include <cuda_runtime_api.h>
 
-#include <debug_log.h>
-
+#include "debug_log.h"
+#include "performance_count.h"
 
 namespace lunchjet {
 
@@ -100,17 +100,56 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     void* input_mem{nullptr};
     if (cudaMalloc(&input_mem, input_mem_size) != cudaSuccess)
     {
-        debug_err("input cuda memory allocation failed, size = %ld bytes", input_mem_size);
+        debug_err("input cuda memory allocation failed, size = %zu bytes", input_mem_size);
         return value_on_error;
     }
     void* output_mem{nullptr};
     if (cudaMalloc(&output_mem, output_mem_size) != cudaSuccess)
     {
-        debug_err("ERROR: output cuda memory allocation failed, size = %ld bytes", output_mem_size);
+        debug_err("ERROR: output cuda memory allocation failed, size = %zu bytes", output_mem_size);
         return value_on_error;
     }
 
-    return value_on_error;
+    auto infer_start = time_now();
+    cudaStream_t stream;
+    if (cudaStreamCreate(&stream) != cudaSuccess)
+    {
+        debug_debug("ERROR: cuda stream creation failed.");
+        return value_on_error;
+    }
+
+    // Copy image data to input binding memory
+    if (cudaMemcpyAsync(input_mem, image.data, input_mem_size, cudaMemcpyHostToDevice, stream) != cudaSuccess)
+    {
+        debug_debug("ERROR: CUDA memory copy of input failed, size = %zu bytes", input_mem_size);
+        return value_on_error;
+    }
+
+    // Run TensorRT inference
+    void* bindings[] = {input_mem, output_mem};
+    if (context->enqueueV2(bindings, stream, nullptr) == false)
+    {
+        debug_debug("ERROR: TensorRT inference failed");
+        return value_on_error;
+    }
+
+    // Copy predictions from output binding memory
+    auto output_buffer = std::unique_ptr<float[]>{new float[output_mem_size]};
+    if (cudaMemcpyAsync(output_buffer.get(), output_mem, output_mem_size, cudaMemcpyDeviceToHost, stream) != cudaSuccess)
+    {
+        debug_debug("ERROR: CUDA memory copy of output failed, size = %zu bytes", output_mem_size);
+        return value_on_error;
+    }
+    cudaStreamSynchronize(stream);
+
+    std::cout << "infer time: " << duration_ms_from(infer_start) << "ms" << std::endl;
+
+    DriveParameter ret = {output_buffer[0], output_buffer[1]};
+
+    cudaFree(input_mem);
+    cudaFree(output_mem);
+
+    return ret;
 }
 
 } //namespace lunchjet
