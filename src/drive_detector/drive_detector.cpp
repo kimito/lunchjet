@@ -75,11 +75,16 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
     if(input_index == -1) {
         debug_err("getBindingIndex() for input failed: %s", input_name.c_str());
     }
-    auto input_dims = nvinfer1::Dims4{1, IMAGE_HEIGHT, IMAGE_WIDTH, 3 /* channels */};
-    input_mem_size = getMemorySize(input_dims, sizeof(float));
-    if(context->setBindingDimensions(input_index, input_dims) == false) {
-        debug_err("setBindingDimensions() for input failed");
+    // auto input_dims = nvinfer1::Dims4{1, IMAGE_HEIGHT, IMAGE_WIDTH, 3 /* channels */};
+    auto input_dims = context->getBindingDimensions(input_index);
+    std::cout << "input dims:" << std::endl;
+    for(auto i = 0; i < input_dims.nbDims; ++i) {
+        std::cout << "dim " << i << ": " << input_dims.d[i] << std::endl;
     }
+    input_mem_size = getMemorySize(input_dims, sizeof(float));
+    // if(context->setBindingDimensions(input_index, input_dims) == false) {
+    //     debug_err("setBindingDimensions() for input failed");
+    // }
 
     //configure output tensor
     std::string output_name("output");
@@ -117,6 +122,10 @@ DriveDetector::~DriveDetector()
 
 DriveParameter DriveDetector::detect(const cv::Mat &image)
 {
+    cv::Mat image_rgb, image_rgb_float;
+    cv::cvtColor(image, image_rgb, cv::COLOR_BGR2RGB);
+    image_rgb.convertTo(image_rgb_float, CV_32F);
+
     auto infer_start = time_now();
     cudaStream_t stream;
     if (cudaStreamCreate(&stream) != cudaSuccess)
@@ -126,7 +135,7 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     }
 
     // Copy image data to input binding memory
-    if (cudaMemcpyAsync(input_mem, image.data, input_mem_size, cudaMemcpyHostToDevice, stream) != cudaSuccess)
+    if (cudaMemcpyAsync(input_mem, image_rgb_float.data, input_mem_size, cudaMemcpyHostToDevice, stream) != cudaSuccess)
     {
         debug_debug("ERROR: CUDA memory copy of input failed, size = %zu bytes", input_mem_size);
         return value_on_error;
