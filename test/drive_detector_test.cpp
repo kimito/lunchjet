@@ -2,6 +2,8 @@
 
 #include "drive_detector.h"
 
+#include "performance_count.h"
+
 using namespace lunchjet;
 
 int main(int argc, char *argv[])
@@ -15,8 +17,13 @@ int main(int argc, char *argv[])
     cv::Mat image = cv::imread(argv[2]);
 
     for(int i = 0; i < 10; ++i) {
+        auto infer_start = time_now();
+        
         auto params = dcon.detect(image);
-        std::cout << "parameters: steer=" << params.steering << " throtle=" << params.throtle << std::endl;
+
+        std::cout << "params: steer=" << params.steering
+         << " throtle=" << params.throtle
+         << " " << duration_ms_from(infer_start) << "ms" << std::endl;
     }
     return 0;
 }

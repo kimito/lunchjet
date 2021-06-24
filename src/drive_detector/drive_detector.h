@@ -41,6 +41,7 @@ class DriveDetector {
     size_t output_mem_size;
     void* input_mem;
     void* output_mem;
+    cudaStream_t stream;
 };
 
 } //namespace lunchjet

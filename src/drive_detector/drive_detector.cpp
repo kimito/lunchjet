@@ -20,16 +20,12 @@ class Logger : public nvinfer1::ILogger
  {
      void log(Severity severity, const char* msg) override
      {
-         // suppress info-level messages
-         if (/*severity < Severity::kINFO*/ true)
-            // debug_debug("TensorRT log: %d %s", severity ,msg);
-            std::cout << static_cast<int>(severity) << ":" << msg << std::endl;
+         if (severity < Severity::kINFO)
+            debug_debug("TensorRT log: %d %s", static_cast<int>(severity) ,msg);
      }
 };
 static Logger logger;
 static DriveParameter value_on_error = {0.f, 0.f};
-static const int IMAGE_HEIGHT = 240;
-static const int IMAGE_WIDTH = 360;
 
 
 DriveDetector::DriveDetector(const std::string &model_file_path)
@@ -39,7 +35,8 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
  input_mem_size(0),
  output_mem_size(0),
  input_mem(nullptr),
- output_mem(nullptr)
+ output_mem(nullptr),
+ stream()
 {
     std::ifstream engine_file(engine_file_path, std::ios::binary);
     if (engine_file.fail())
@@ -75,16 +72,8 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
     if(input_index == -1) {
         debug_err("getBindingIndex() for input failed: %s", input_name.c_str());
     }
-    // auto input_dims = nvinfer1::Dims4{1, IMAGE_HEIGHT, IMAGE_WIDTH, 3 /* channels */};
     auto input_dims = context->getBindingDimensions(input_index);
-    std::cout << "input dims:" << std::endl;
-    for(auto i = 0; i < input_dims.nbDims; ++i) {
-        std::cout << "dim " << i << ": " << input_dims.d[i] << std::endl;
-    }
     input_mem_size = getMemorySize(input_dims, sizeof(float));
-    // if(context->setBindingDimensions(input_index, input_dims) == false) {
-    //     debug_err("setBindingDimensions() for input failed");
-    // }
 
     //configure output tensor
     std::string output_name("output");
@@ -94,10 +83,6 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
         debug_err("getBindingIndex() for output failed: %s", output_name.c_str());
     }
     auto output_dims = context->getBindingDimensions(output_index);
-    debug_debug("output dims:");
-    for(int i=0;i<output_dims.nbDims;++i) {
-        debug_debug("  dim %d: %d", i, output_dims.d[i]);
-    }
     output_mem_size = getMemorySize(output_dims, sizeof(float));
 
     // Allocate CUDA memory for input and output bindings
@@ -110,6 +95,11 @@ DriveDetector::DriveDetector(const std::string &model_file_path)
         debug_err("ERROR: output cuda memory allocation failed, size = %zu bytes", output_mem_size);
     }
 
+    cudaStream_t stream;
+    if (cudaStreamCreate(&stream) != cudaSuccess)
+    {
+        debug_debug("ERROR: cuda stream creation failed.");
+    }
 }
 
 
@@ -125,14 +115,6 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     cv::Mat image_rgb, image_rgb_float;
     cv::cvtColor(image, image_rgb, cv::COLOR_BGR2RGB);
     image_rgb.convertTo(image_rgb_float, CV_32F);
-
-    auto infer_start = time_now();
-    cudaStream_t stream;
-    if (cudaStreamCreate(&stream) != cudaSuccess)
-    {
-        debug_debug("ERROR: cuda stream creation failed.");
-        return value_on_error;
-    }
 
     // Copy image data to input binding memory
     if (cudaMemcpyAsync(input_mem, image_rgb_float.data, input_mem_size, cudaMemcpyHostToDevice, stream) != cudaSuccess)
@@ -158,11 +140,7 @@ DriveParameter DriveDetector::detect(const cv::Mat &image)
     }
     cudaStreamSynchronize(stream);
 
-    std::cout << "infer time: " << duration_ms_from(infer_start) << "ms" << std::endl;
-
-    DriveParameter ret = {output_buffer[0], output_buffer[1]};
-
-    return ret;
+    return {output_buffer[0], output_buffer[1]};
 }
 
 } //namespace lunchjet
