@@ -36,6 +36,13 @@ class RCCarControllerListener {
     virtual void on_change_accel(float value) = 0;
 
     /**
+     * an event handler for receiving value for brake
+     * @param[in] value brake strength, 0 for not braking, 1 for full braking.
+     */
+
+    virtual void on_change_brake(float value) = 0;
+
+    /**
      * an event handler for recieving status of the back button
      * @param[in] value status of the back button, 0 with pressed, 1 with released
      */

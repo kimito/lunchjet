@@ -30,6 +30,7 @@ class RCCarServer : public RCCarControllerListener {
     void on_connect() override;
     void on_change_steering(float value) override;
     void on_change_accel(float value) override;
+    void on_change_brake(float value) override;
     void on_change_back(int value) override;
     void on_select() override;
     void on_close() override;
@@ -41,6 +42,7 @@ class RCCarServer : public RCCarControllerListener {
     bool is_going_back;
     std::atomic<bool> is_connected;
     std::atomic<float> steering, speed;
+    std::atomic<float> throtle_magnification;
     bool is_manual_drived;
     SettingVariables vars;
     std::unique_ptr<DriveDetector> detector;

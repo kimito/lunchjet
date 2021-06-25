@@ -40,6 +40,7 @@ RCCarServer::RCCarServer(std::atomic<bool> &stop_controller_thread)
    is_going_back(false),
    is_connected(false),
    steering(0.0f), speed(0.0f),
+   throtle_magnification(THROTLE_GAIN_FORWARD),
    is_manual_drived(true),
    detector(nullptr)
 {
@@ -73,11 +74,18 @@ void RCCarServer::on_change_accel(float value)
             driver.back(value * 0.3f);
         }
         else {
-            driver.go(value * THROTLE_GAIN_FORWARD);
+            driver.go(value * throtle_magnification);
         }
 
         speed = value;
     }
+}
+
+void RCCarServer::on_change_brake(float value)
+{
+    //when not braking(value = 0) , throtle_magnification bust be THROTLE_GAIN_FORWARD
+    //when full braking(value = 1), throtle_magnification must be 0
+    throtle_magnification = THROTLE_GAIN_FORWARD * (1 - value);
 }
 
 void RCCarServer::on_change_back(int value)
@@ -125,6 +133,9 @@ void RCCarServer::on_select()
         //just in case, reloadig the model
         detector.reset(new DriveDetector(MODEL_PATH));
     }
+    else {
+       throtle_magnification = THROTLE_GAIN_FORWARD;
+    }
 }
 
 void RCCarServer::on_close()
@@ -161,7 +172,7 @@ void RCCarServer::handle_video(cv::Mat &image)
     else {
         auto params = detector->detect(image);
         driver.steer(params.steering);
-        driver.go(params.throtle);
+        driver.go(params.throtle * throtle_magnification);
     }
 }
 

@@ -41,6 +41,9 @@ class ControllerListener : public RCCarControllerListener {
         }
     }
 
+    void on_change_brake(float value) override {
+        std::cout << "brake: " << value << std::endl;
+    }
 };
 
 int main(int argc, const char *argv[])
@@ -53,7 +56,7 @@ int main(int argc, const char *argv[])
     sigaction(SIGTERM, &sa, NULL);
 
     ControllerListener listener;
-    RCCarController controller("/dev/input/event3", listener, stop_controller_thread);
+    RCCarController controller("/dev/input/event2", listener, stop_controller_thread);
 
     if(controller.listen() < 0) {
         perror("listen() failed");

@@ -15,7 +15,8 @@ RCCarController::RCCarController(const std::string &device_file_name,
      {EV_ABS, ABS_X},
      {EV_ABS, ABS_RZ},
      {EV_KEY, BTN_SOUTH},
-     {EV_KEY, BTN_TL}},
+     {EV_KEY, BTN_TL},
+     {EV_ABS, ABS_Z}},
      *this);
 }
 
@@ -23,6 +24,7 @@ int RCCarController::listen()
 {
     listener.on_change_accel(0);
     listener.on_change_steering(0);
+    listener.on_change_brake(0);
 
     return device.listen();
 }
@@ -53,6 +55,9 @@ void RCCarController::on_receive(const struct input_event &event)
             if(event.value == 0) { //fire event when the key released
                 listener.on_select();
             }
+            break;
+        case ABS_Z:
+            listener.on_change_brake(convert_accel_value(event.value, 0, 1023));
             break;
         default:
             debug_warning("unknown code:%d value:%d", event.code, event.value);
