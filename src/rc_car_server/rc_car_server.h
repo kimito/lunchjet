@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <memory>
 
 #include "rc_car_controller.h"
 #include "rc_car_driver.h"
@@ -8,6 +9,7 @@
 #include "debug_log.h"
 #include "string_utils.h"
 #include "setting_variables.h"
+#include "drive_detector.h"
 
 namespace lunchjet
 {
@@ -41,8 +43,11 @@ class RCCarServer : public RCCarControllerListener {
     std::atomic<float> steering, speed;
     bool is_manual_drived;
     SettingVariables vars;
+    std::unique_ptr<DriveDetector> detector;
 
-    void handle_video(cv::Mat &image);
+    void handle_video(cv::Mat &image);    
+    void record_control_data(cv::Mat &image);
+    void upload_control_data();
 };
 
  

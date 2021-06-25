@@ -10,9 +10,29 @@
 
 #include "debug_log.h"
 
+namespace {
+    const std::string MODEL_PATH = "/opt/lunchjet/model.trt";
+    const float THROTLE_GAIN_FORWARD = 0.2f;
+    const float THROTLE_GAIN_BACKWARD = 0.3f;
+
+    std::string get_log_filename_base() {
+        struct timespec ts;
+        clock_gettime(CLOCK_REALTIME_COARSE, &ts);
+        struct tm _tm;
+        localtime_r(&(ts.tv_sec), &_tm);
+
+        char time_str[20];
+        strftime(time_str, sizeof(time_str), "%Y_%m_%d_%H_%M_%S",&_tm);
+
+        char ms_str[5];
+        snprintf(ms_str, sizeof(ms_str), "_%03ld", (ts.tv_nsec / (1000 * 1000)));
+
+        return std::string(time_str) + std::string(ms_str);
+    }
+}
+
 
 namespace lunchjet {
-
 
 RCCarServer::RCCarServer(std::atomic<bool> &stop_controller_thread)
  : controller("/dev/input/event2", *this, stop_controller_thread),
@@ -20,7 +40,8 @@ RCCarServer::RCCarServer(std::atomic<bool> &stop_controller_thread)
    is_going_back(false),
    is_connected(false),
    steering(0.0f), speed(0.0f),
-   is_manual_drived(true)
+   is_manual_drived(true),
+   detector(nullptr)
 {
     video_device.start_capture();
 }
@@ -38,37 +59,43 @@ void RCCarServer::on_connect()
 
 void RCCarServer::on_change_steering(float value)
 {
-    driver.steer(value);
+    if(is_manual_drived) {
+        driver.steer(value);
 
-    steering = value;
+        steering = value;
+    }
 }
 
 void RCCarServer::on_change_accel(float value)
-{    
-    if(is_going_back) {
-        driver.back(value * 0.3f);
-    }
-    else {
-        driver.go(value * 0.2f);
-    }
+{
+    if(is_manual_drived) {
+        if(is_going_back) {
+            driver.back(value * 0.3f);
+        }
+        else {
+            driver.go(value * THROTLE_GAIN_FORWARD);
+        }
 
-    speed = value;
+        speed = value;
+    }
 }
 
 void RCCarServer::on_change_back(int value)
 {
-    if(value) {
-        is_going_back = true;
-    }
-    else {
-        is_going_back = false;
+    if(is_manual_drived) {
+        if(value) {
+            is_going_back = true;
+        }
+        else {
+            is_going_back = false;
+        }
     }
 }
 
-void RCCarServer::on_select()
+void RCCarServer::upload_control_data()
 {
-    debug_debug("pressed select button");
-    if(is_manual_drived) {
+#if 0
+        //upload training data to Google Cloud
         debug_notice("stating upload control logs to Google drive...");
         std::string shell_param = "PYTHONPATH=" + vars["PYTHONPATH"] + 
             " python3 /opt/lunchjet/scripts/upload_training_data.py"
@@ -81,9 +108,23 @@ void RCCarServer::on_select()
         else {
             debug_err("uploading failed : %s", strerror(errno));
         }
-    }
+#endif
+}
 
+
+void RCCarServer::on_select()
+{
+    debug_debug("pressed select button");
+
+    //flip the mode
     is_manual_drived != is_manual_drived;
+
+    if(!is_manual_drived) {
+        upload_control_data();
+
+        //just in case, reloadig the model
+        detector.reset(new DriveDetector(MODEL_PATH));
+    }
 }
 
 void RCCarServer::on_close()
@@ -92,24 +133,7 @@ void RCCarServer::on_close()
     is_connected = false;
 }
 
-namespace {
-    std::string get_log_filename_base() {
-        struct timespec ts;
-        clock_gettime(CLOCK_REALTIME_COARSE, &ts);
-        struct tm _tm;
-        localtime_r(&(ts.tv_sec), &_tm);
-
-        char time_str[20];
-        strftime(time_str, sizeof(time_str), "%Y_%m_%d_%H_%M_%S",&_tm);
-
-        char ms_str[5];
-        snprintf(ms_str, sizeof(ms_str), "_%03ld", (ts.tv_nsec / (1000 * 1000)));
-
-        return std::string(time_str) + std::string(ms_str);
-    }
-}
-
-void RCCarServer::handle_video(cv::Mat &image)
+void RCCarServer::record_control_data(cv::Mat &image)
 {
     if(!is_connected || std::abs(speed) < 0.1) {
         return;
@@ -126,6 +150,19 @@ void RCCarServer::handle_video(cv::Mat &image)
     ofs_drive << image_file_name << " " << steering << " " << speed << std::endl;
 
     cv::imwrite(std::string(LOG_IMAGE_DIR) + "/" + image_file_name, image);
+
+}
+
+void RCCarServer::handle_video(cv::Mat &image)
+{
+    if(is_manual_drived) {
+        record_control_data(image);
+    }
+    else {
+        auto params = detector->detect(image);
+        driver.steer(params.steering);
+        driver.go(params.throtle);
+    }
 }
 
 

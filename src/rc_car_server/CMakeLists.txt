@@ -9,7 +9,8 @@ target_link_libraries(lunchjet_rc_car_server
  lunchjet_include 
  lunchjet_rc_car_controller 
  lunchjet_rc_car_driver 
- lunchjet_video_input_device)
+ lunchjet_video_input_device
+ lunchjet_drive_detector)
 target_compile_definitions(lunchjet_rc_car_server
  PRIVATE LOG_IMAGE_DIR="${LOG_IMAGE_DIR}"
  PRIVATE LOG_ANNOTAION_DIR="${LOG_ANNOTAION_DIR}")
