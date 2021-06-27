@@ -45,7 +45,7 @@ class RCCarServer : public RCCarControllerListener {
     std::atomic<float> throtle_magnification;
     bool is_manual_drived;
     SettingVariables vars;
-    std::unique_ptr<DriveDetector> detector;
+    DriveDetector detector;
 
     void handle_video(cv::Mat &image);    
     void record_control_data(cv::Mat &image);

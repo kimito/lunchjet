@@ -42,7 +42,7 @@ RCCarServer::RCCarServer(std::atomic<bool> &stop_controller_thread)
    steering(0.0f), speed(0.0f),
    throtle_magnification(THROTLE_GAIN_FORWARD),
    is_manual_drived(true),
-   detector(nullptr)
+   detector(MODEL_PATH)
 {
     video_device.start_capture();
 }
@@ -125,16 +125,18 @@ void RCCarServer::on_select()
     debug_debug("pressed select button");
 
     //flip the mode
-    is_manual_drived != is_manual_drived;
+    is_manual_drived = !is_manual_drived;
 
     if(!is_manual_drived) {
+        debug_notice("now autonomous mode");
         upload_control_data();
-
-        //just in case, reloadig the model
-        detector.reset(new DriveDetector(MODEL_PATH));
     }
     else {
+       debug_notice("now manual mode");
        throtle_magnification = THROTLE_GAIN_FORWARD;
+
+        this->on_change_steering(0.0f);
+        this->on_change_accel(0.0f);
     }
 }
 
@@ -170,7 +172,8 @@ void RCCarServer::handle_video(cv::Mat &image)
         record_control_data(image);
     }
     else {
-        auto params = detector->detect(image);
+        auto params = detector.detect(image);
+
         driver.steer(params.steering);
         driver.go(params.throtle * throtle_magnification);
     }
