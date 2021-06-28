@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
         auto params = dcon.detect(image);
 
         std::cout << "params: steer=" << params.steering
-         << " throtle=" << params.throtle
+         << " throttle=" << params.throttle
          << " " << duration_ms_from(infer_start) << "ms" << std::endl;
     }
     return 0;

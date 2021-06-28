@@ -28,8 +28,8 @@ class ControllerListener : public RCCarControllerListener {
         std::cout << "steering:" << value << std::endl;
     }
 
-    void on_change_accel(float value) override {
-        std::cout << "accele:" << value << std::endl;
+    void on_change_throttle(float value) override {
+        std::cout << "throttle:" << value << std::endl;
     }
 
     void on_change_back(int value) override {

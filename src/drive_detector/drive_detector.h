@@ -11,7 +11,7 @@ namespace lunchjet {
 
 struct DriveParameter {
     float steering;
-    float throtle;
+    float throttle;
 };
 
 class DriveDetector {

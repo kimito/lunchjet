@@ -20,18 +20,18 @@ class RCCarDriver {
     int steer(float value);
 
     /**
-     * go forward with a specific speed (memo: 0.084 is seemed to be a threshold to actual move)
-     * @param[in] speed from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full speed.
+     * go forward with a specific throttle (memo: 0.084 is seemed to be a threshold to actual move)
+     * @param[in] throttle from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full throttle.
      * @return 0 on success, otherwise error (see errno)
      */
-    int go(float speed);
+    int go(float throttle);
 
     /**
-     * go backward with a specific speed
-     * @param[in] speed from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full speed.
+     * go backward with a specific throttle
+     * @param[in] throttle from 0.0 to 1.0. 0.0 means stopping. 1.0 means going with full throttle.
      * @return 0 on success, otherwise error (see errno)
      */
-    int back(float speed);
+    int back(float throttle);
 
     /**
      * stop the drive motor

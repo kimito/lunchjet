@@ -18,8 +18,8 @@ int main(int argc, const char *argv[])
 
     //stop and go
     for(float s = 0.f; s <= 2.f; s+=0.01f) {
-        auto speed = 0.2/*max speed cap*/ * ((-std::cos(2*M_PI*s)+1)/2);
-        car.go(speed);
+        auto throttle = 0.2/*max throttle cap*/ * ((-std::cos(2*M_PI*s)+1)/2);
+        car.go(throttle);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 

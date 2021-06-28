@@ -37,23 +37,23 @@ int RCCarDriver::steer(float value)
     return driver.set_pulse(STEER_SERVO, pulse_width(value));
 }
 
-int RCCarDriver::go(float speed)
+int RCCarDriver::go(float throttle)
 {
     //avoid to move backward
-    if(speed < 0) {
-        speed = 0.0f;
+    if(throttle < 0) {
+        throttle = 0.0f;
     }
 
-    return driver.set_pulse(DRIVE_MOTOR, pulse_width(-speed));
+    return driver.set_pulse(DRIVE_MOTOR, pulse_width(-throttle));
 }
 
-int RCCarDriver::back(float speed)
+int RCCarDriver::back(float throttle)
 {
-    if(speed < 0) {
-        speed = 0.0f;
+    if(throttle < 0) {
+        throttle = 0.0f;
     }
 
-    return driver.set_pulse(DRIVE_MOTOR, pulse_width(speed));
+    return driver.set_pulse(DRIVE_MOTOR, pulse_width(throttle));
 }
 
 int RCCarDriver::stop()

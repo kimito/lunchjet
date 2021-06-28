@@ -30,10 +30,10 @@ class RCCarControllerListener {
     virtual void on_change_steering(float value) = 0;
 
     /**
-     * an event handler for receiving value for accel
-     * @param[in] value accel strength, 0 for stopping, 1 for full speed.
+     * an event handler for receiving value for throttle
+     * @param[in] value throttle strength, 0 for stopping, 1 for full throttle.
      */
-    virtual void on_change_accel(float value) = 0;
+    virtual void on_change_throttle(float value) = 0;
 
     /**
      * an event handler for receiving value for brake
@@ -107,7 +107,7 @@ class RCCarController : public UserInputDevice::EventListener {
     RCCarControllerListener &listener;
 
     float convert_steering_value(int value, int range_min, int range_max);
-    float convert_accel_value(int value, int range_min, int range_max);
+    float convert_throttle_value(int value, int range_min, int range_max);
 };
 
 }//namespace lunchjet
