@@ -57,15 +57,17 @@ object "traning data" as train_data <<directory>> {
 }
 vsink2 .> server
 controller .> server
-server .> driver
-server .> train_data : images\nsteering directions\nspeeds
+server .r> driver
+server ..> train_data : images\nsteering directions\nspeeds
 
 vsink2 -[hidden]- controller
-driver -[hidden]- train_data
 
 object uploader <<script>>
 object "Google Drive" as gdrive <<storage service>>
 train_data .> uploader
-uploader .> gdrive : HTTPS
-driver -[hidden] uploader
+uploader .> gdrive : data archive
+
+object "Google Colab " as gcolab <<ML service>>
+gdrive .> gcolab
+server <.. gcolab : DNN model
 @enduml
